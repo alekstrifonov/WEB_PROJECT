@@ -1,5 +1,6 @@
 # WEB PROJECT STRUCTURE:
 
+```text
 html-to-print-system/
 │
 ├── assets/                     # Статични ресурси
