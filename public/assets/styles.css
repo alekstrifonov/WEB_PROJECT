@@ -33,12 +33,48 @@ html, body {
     width: 100%;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .logo-area h1 {
     font-size: 1.1rem;
     margin: 0;
     font-weight: 600;
     letter-spacing: 0.5px;
     color: var(--periwinkle);
+}
+
+.btn-save {
+    background-color: var(--orange);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+}
+
+.btn-reset {
+    background-color: transparent;
+    color: var(--periwinkle);
+    border: 1px solid rgba(174, 184, 254, 0.3);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-reset:hover {
+    background-color: rgba(174, 184, 254, 0.1);
 }
 
 .account-area {
@@ -158,12 +194,31 @@ small {
     text-align: center;
     border-radius: 8px;
     background: rgba(117, 139, 253, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .upload-zone p {
     margin: 0;
     color: var(--platinum);
     font-weight: bold;
+}
+
+.btn-browse {
+    background-color: var(--indigo);
+    color: white;
+    border: 1px solid var(--cornflower);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: 0.2s;
+}
+
+.btn-browse:hover {
+    background-color: var(--cornflower);
 }
 
 .custom-checkbox {
@@ -211,18 +266,6 @@ section:nth-of-type(5) .input-group {
     color: var(--orange);
     margin-top: 30px;
     text-transform: uppercase;
-}
-
-.notes ul {
-    padding-left: 15px;
-    margin: 0;
-}
-
-.notes li {
-    font-size: 0.8rem;
-    color: var(--periwinkle);
-    margin-bottom: 12px;
-    line-height: 1.5;
 }
 
 ::-webkit-scrollbar {

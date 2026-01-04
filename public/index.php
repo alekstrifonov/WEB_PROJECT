@@ -14,9 +14,13 @@
                 <h1>HTML — Печатен вид</h1>
             </div>
         
-            <div class="account-area">
-                <div class="account-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <div class="header-actions">
+                <button type="button" class="btn-reset">Нулиране</button>
+                <button type="button" class="btn-save">Запази</button>
+                <div class="account-area">
+                    <div class="account-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -29,7 +33,8 @@
                 <section class="form-section">
                     <h2>ФАЙЛ</h2>
                     <div class="upload-zone">
-                        <p>Избери файлове</p>
+                        <input type="file" id="file-explorer" hidden multiple>
+                        <button type="button" class="btn-browse" onclick="document.getElementById('file-explorer').click()">Избери файлове</button>
                         <span>или ги пусни тук</span>
                     </div>
                 </section>
@@ -47,10 +52,6 @@
                         </div>
                     </div>
                     <div class="input-row">
-                        <div class="input-group">
-                            <label>Фак. № / ID</label>
-                            <input type="text" placeholder="Напр. 12345">
-                        </div>
                         <div class="input-group">
                             <label>Курс / група</label>
                             <input type="text" placeholder="Напр. 3 курс">
@@ -76,7 +77,6 @@
                                 <option value="none">Без</option>
                                 <option value="start">В началото</option>
                                 <option value="end">В края</option>
-                                <option value="separate">Отделен документ (екран)</option>
                             </select>
                         </div>
                     </div>
@@ -185,8 +185,8 @@
                         <div class="input-group">
                             <label>Къде</label>
                             <select>
-                                <option value="margin">Вляво (марж)</option>
-                                <option value="inline">В началото на реда (inline)</option>
+                                <option value="margin">Вляво</option>
+                                <option value="inline">В началото на реда</option>
                             </select>
                         </div>
                     </div>
@@ -232,14 +232,6 @@
                         </select>
                     </div>
                 </section>
-
-                <div class="notes">
-                    <h3>БЕЛЕЖКИ</h3>
-                    <ul>
-                        <li>Прототипът преобразува съдържанието към текстово печатен вид (удобен за реферати/код).</li>
-                        <li>За сложни HTML оформления са нужни по-дълбоки алгоритми.</li>
-                    </ul>
-                </div>
             </form>
         </aside>
 
