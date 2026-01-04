@@ -1,0 +1,235 @@
+:root {
+    --indigo: #27187E;
+    --cornflower: #758BFD;
+    --periwinkle: #AEB8FE;
+    --platinum: #F1F2F6;
+    --orange: #FF8600;
+    --bg-slate: #1e1e2f;
+    --sidebar-slate: #252545;
+    --input-slate: #2d2d5a;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-slate);
+    color: var(--platinum);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-header {
+    background: var(--sidebar-slate);
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-area h1 {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--periwinkle);
+}
+
+.account-area {
+    display: flex;
+    align-items: center;
+}
+
+.account-icon {
+    width: 34px;
+    height: 34px;
+    background: var(--orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.account-icon:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+}
+
+.account-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 65px);
+}
+
+.sidebar {
+    width: 420px;
+    background-color: var(--sidebar-slate);
+    padding: 25px;
+    overflow-y: auto;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.form-section {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(174, 184, 254, 0.1);
+}
+
+h2 {
+    margin: 0 0 20px 0;
+    font-size: 0.85rem;
+    color: var(--orange);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    flex: 1 1 calc(50% - 15px);
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 0.75rem;
+    color: var(--periwinkle);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    background: var(--input-slate);
+    border: 1px solid rgba(117, 139, 253, 0.3);
+    color: var(--platinum);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--orange);
+    background: #34346b;
+}
+
+textarea {
+    min-height: 80px;
+}
+
+small {
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 25px;
+    font-size: 0.72rem;
+    color: var(--cornflower);
+    line-height: 1.4;
+}
+
+.upload-zone {
+    border: 2px dashed rgba(174, 184, 254, 0.3);
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px;
+    background: rgba(117, 139, 253, 0.05);
+}
+
+.upload-zone p {
+    margin: 0;
+    color: var(--platinum);
+    font-weight: bold;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--orange);
+    width: 17px;
+    height: 17px;
+}
+
+section:nth-of-type(4) .input-row,
+section:nth-of-type(5) .input-row {
+    flex-direction: column;
+    gap: 15px;
+}
+
+section:nth-of-type(4) .input-group,
+section:nth-of-type(5) .input-group {
+    flex: 1 1 100%;
+}
+
+.preview-area {
+    flex: 1;
+    background-color: var(--bg-slate);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state {
+    color: var(--periwinkle);
+    opacity: 0.2;
+    font-size: 1.2rem;
+}
+
+.notes h3 {
+    font-size: 0.9rem;
+    color: var(--orange);
+    margin-top: 30px;
+    text-transform: uppercase;
+}
+
+.notes ul {
+    padding-left: 15px;
+    margin: 0;
+}
+
+.notes li {
+    font-size: 0.8rem;
+    color: var(--periwinkle);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--orange);
+    border-radius: 10px;
+}
