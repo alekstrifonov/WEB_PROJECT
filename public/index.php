@@ -241,7 +241,7 @@
             </div>
         </section>
     </main>
-
+    <script src="assets/PreviewPane.js"></script>
     <script src="assets/script.js"></script>
 </body>
 </html>
