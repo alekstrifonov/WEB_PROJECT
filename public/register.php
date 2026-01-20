@@ -213,7 +213,7 @@ declare(strict_types=1);
 
 <body>
   <header class="topbar">
-    <a class="brand" href="/public/welcome.php">
+    <a class="brand" href="welcome.php">
       <span class="logo">⎙</span>
       <span>
         <strong>HTMLPrint</strong>
@@ -244,7 +244,7 @@ declare(strict_types=1);
 
         <p class="hint">
           Вече имаш профил?
-          <a href="/public/login.php"><strong>Влез</strong></a>
+          <a href="login.php"><strong>Влез</strong></a>
         </p>
       </form>
     </article>

@@ -230,7 +230,7 @@ $projects = [
 
 <body>
   <header class="topbar">
-    <a class="brand" href="/public/dashboard.php">
+    <a class="brand" href="dashboard.php">
       <span class="logo">⎙</span>
       <span>
         <strong>HTMLPrint</strong>
@@ -238,8 +238,8 @@ $projects = [
     </a>
 
     <nav class="actions">
-      <a class="btn secondary" href="/public/profile-settings.php">Настройки на профила</a>
-      <a class="btn primary" href="/public/welcome.php">Изход</a>
+      <a class="btn secondary" href="profile-settings.php">Настройки на профила</a>
+      <a class="btn primary" href="welcome.php">Изход</a>
     </nav>
   </header>
 
@@ -254,7 +254,7 @@ $projects = [
     <section class="projects" aria-labelledby="projects-title">
       <header>
         <h2 id="projects-title">Моите проекти</h2>
-        <a class="btn primary" href="/public/editor.php">Нов проект</a>
+        <a class="btn primary" href="editor.php">Нов проект</a>
       </header>
 
       <?php if (empty($projects)): ?>
@@ -274,7 +274,7 @@ $projects = [
                 </small>
               </div>
               <div class="actions">
-                <a class="btn secondary" href="/public/editor.php?project_id=<?= (int)$p['id'] ?>">
+                <a class="btn secondary" href="editor.php?project_id=<?= (int)$p['id'] ?>">
                   Отвори
                 </a>
               </div>

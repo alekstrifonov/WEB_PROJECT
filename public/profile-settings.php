@@ -230,7 +230,7 @@ $errors = [
 
 <body>
   <header class="topbar">
-    <a class="brand" href="/dashboard.php">
+    <a class="brand" href="dashboard.php">
       <span class="logo">⎙</span>
       <span>
         <strong>HTMLPrint</strong>
@@ -238,7 +238,7 @@ $errors = [
     </a>
 
     <nav class="actions">
-      <a class="btn secondary" href="/public/dashboard.php">Профил</a>
+      <a class="btn secondary" href="dashboard.php">Профил</a>
     </nav>
   </header>
 

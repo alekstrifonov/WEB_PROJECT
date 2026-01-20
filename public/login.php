@@ -237,7 +237,7 @@ declare(strict_types=1);
 
 <body>
   <header class="topbar" role="banner">
-    <a class="brand" href="/public/welcome.php" aria-label="Към началната страница">
+    <a class="brand" href="welcome.php" aria-label="Към началната страница">
       <span class="logo" aria-hidden="true">⎙</span>
       <span>
         <strong>HTMLPrint</strong>
@@ -263,7 +263,7 @@ declare(strict_types=1);
         <button class="submit" type="submit">Вход</button>
 
         <div class="actions-row">
-          <span class="hint">Нямаш профил? <a href="/public/register.php"><strong>Регистрирай се</strong></a></span>
+          <span class="hint">Нямаш профил? <a href="register.php"><strong>Регистрирай се</strong></a></span>
           <!-- Optional: add a "forgot password" later -->
           <!-- <a href="/forgot.php">Забравена парола?</a> -->
         </div>

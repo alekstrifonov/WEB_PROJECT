@@ -226,8 +226,8 @@ declare(strict_types=1);
     </div>
 
     <nav class="actions" aria-label="Потребителски действия">
-      <a href="/public/login.php" class="btn login">Вход</a>
-      <a href="/public/register.php" class="btn register">Регистрация</a>
+      <a href="login.php" class="btn login">Вход</a>
+      <a href="register.php" class="btn register">Регистрация</a>
     </nav>
 
   </header>
