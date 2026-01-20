@@ -209,6 +209,61 @@ small {
     color: var(--periwinkle);
 }
 
+#file-list {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.file-item {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(174, 184, 254, 0.1);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+}
+
+.file-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--platinum);
+}
+
+.file-size {
+    font-size: 0.8rem;
+    color: var(--periwinkle);
+    opacity: 0.6;
+}
+
+.btn-remove {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--platinum);
+    padding: 8px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+
+.btn-remove:hover {
+    background: rgba(255, 77, 77, 0.1);
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+}
+
 .btn-browse {
     background-color: var(--indigo);
     color: white;
@@ -280,5 +335,3 @@ section:nth-of-type(5) .input-group {
     background: var(--orange);
     border-radius: 10px;
 }
-
-
