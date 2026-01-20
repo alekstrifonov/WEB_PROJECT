@@ -94,7 +94,7 @@ class UserModel
             $stmt->execute([$name, $email, $passwordHash]);
         } catch (PDOException $e) {
             if ($this->isDuplicateKey($e)) {
-                throw new RuntimeException('Email already exists.');
+                throw new RuntimeException('Този имейл вече е зает.');
             }
             throw $e;
         }

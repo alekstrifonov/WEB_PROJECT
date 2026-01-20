@@ -1,5 +1,22 @@
 <?php
 declare(strict_types=1);
+
+session_start();
+
+$flashError = $_SESSION['register_error'] ?? '';
+$flashFieldErrors = $_SESSION['register_field_errors'] ?? [];
+$old = $_SESSION['register_old'] ?? [];
+
+// изчистваме flash-а, за да не стои при refresh
+unset($_SESSION['register_error'], $_SESSION['register_field_errors'], $_SESSION['register_old']);
+
+function h(string $s): string {
+  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+}
+
+function fe(array $errors, string $key): string {
+  return isset($errors[$key]) ? (string)$errors[$key] : '';
+}
 ?>
 <!doctype html>
 <html lang="bg">
@@ -150,6 +167,11 @@ declare(strict_types=1);
       border-color: rgba(255,134,0,.45);
     }
 
+    .field-error{
+      font-size: 12px;
+      color: rgba(255,134,0,1);
+    }
+
     form{
       display:grid;
       gap: 12px;
@@ -227,19 +249,45 @@ declare(strict_types=1);
         <h1 id="register-title">Регистрация</h1>
       </header>
 
-      <form method="post" action="/api/auth/register.php" autocomplete="on">
-        <label for="name">Име</label>
+      <form method="post" action="./api/register.php" autocomplete="on" novalidate>
+        <!-- <label for="name">Име</label>
         <input id="name" name="name" type="text" required>
-
+        
         <label for="email">Имейл</label>
         <input id="email" name="email" type="email" placeholder="name@example.com" required>
 
         <label for="password">Парола</label>
-        <input id="password" name="password" type="password" minlength="8" required>
+        <input id="password" name="password" type="password" minlength="8">
 
         <label for="password2">Потвърди парола</label>
-        <input id="password2" name="password2" type="password" minlength="8" required>
+        <input id="password2" name="password2" type="password" minlength="8"> -->
 
+        <label for="name">Име</label>
+        <input type="text" name="name" id="name"
+              value="<?php echo h((string)($old['name'] ?? '')); ?>">
+        <?php if (!empty($flashFieldErrors['name'])): ?>
+          <div class="field-error"><?php echo h($flashFieldErrors['name']); ?></div>
+        <?php endif; ?>
+
+        <label for="email">Имейл</label>
+        <input type="email" name="email" id="email"
+              value="<?php echo h((string)($old['email'] ?? '')); ?>">
+        <?php if (!empty($flashFieldErrors['email'])): ?>
+          <div class="field-error"><?php echo h($flashFieldErrors['email']); ?></div>
+        <?php endif; ?>
+
+        <label for="password">Парола</label>
+        <input id="password" name="password" type="password">
+        <?php if (!empty($flashFieldErrors['password'])): ?>
+          <div class="field-error"><?php echo h($flashFieldErrors['password']); ?></div>
+        <?php endif; ?>
+
+        <label for="password2">Потвърди парола</label>
+        <input id="password2" name="password2" type="password">
+        <?php if (!empty($flashFieldErrors['password2'])): ?>
+          <div class="field-error"><?php echo h($flashFieldErrors['password2']); ?></div>
+        <?php endif; ?>
+        
         <button class="submit" type="submit">Създай профил</button>
 
         <p class="hint">
