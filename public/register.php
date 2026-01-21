@@ -271,7 +271,7 @@ function fe(array $errors, string $key): string {
 
         <label for="email">Имейл</label>
         <input type="email" name="email" id="email"
-              value="<?php echo h((string)($old['email'] ?? '')); ?>">
+              value="<?php echo h((string)($old['email'] ?? '')); ?>" placeholder="name@example.com">
         <?php if (!empty($flashFieldErrors['email'])): ?>
           <div class="field-error"><?php echo h($flashFieldErrors['email']); ?></div>
         <?php endif; ?>

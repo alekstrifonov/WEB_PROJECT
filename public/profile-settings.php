@@ -1,14 +1,20 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/../core/require_login.php';
+
 session_start();
 
 // MOCK DATA – замени с реално зареждане от DB
 $userName  = $_SESSION['user_name'] ?? 'Потребител';
 $userEmail = $_SESSION['user_email'] ?? 'user@example.com';
 
-$err = $_GET['err'] ?? '';
-$msg = $_GET['msg'] ?? '';
+$profileError = $_SESSION['profile_error'] ?? [];
+$fieldErrors = $_SESSION['profile_field_errors'] ?? [];
+$oldField = $_SESSION['profile_field_old'] ?? [];
+
+unset($_SESSION['profile_error'], $_SESSION['profile_field_errors'], $_SESSION['profile_field_old']);
+//unset($_SESSION['profile_field_errors'], $_SESSION['profile_field_old']);
 
 function h(string $s): string {
   return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
@@ -170,6 +176,16 @@ $errors = [
       color: var(--muted);
     }
 
+    .field-error{
+      font-size: 12px;
+      color: rgba(255,134,0,1);
+    }
+
+    .success{
+      font-size: 12px;
+      color: rgb(16, 171, 39);
+    }
+
     form{
       margin-top: 14px;
       display:grid;
@@ -245,22 +261,23 @@ $errors = [
   <main>
     <h1>Настройки на профила</h1>
 
-    <?php if ($msg && isset($messages[$msg])): ?>
-      <div class="alert"><?= h($messages[$msg]) ?></div>
-    <?php endif; ?>
-
-    <?php if ($err && isset($errors[$err])): ?>
-      <div class="alert error"><?= h($errors[$err]) ?></div>
-    <?php endif; ?>
-
     <!-- Change name -->
     <section class="card">
       <header>
         <h2>Име</h2>
       </header>
 
-      <form method="post" action="/api/profile/update-name.php">
-        <input id="name" name="name" type="text" required value="<?= h($userName) ?>">
+      <form method="post" action="./api/update-name.php" novalidate>
+        <input id="name" name="name" type="text" value="<?= h($oldField['name'] ?? $userName) ?>">
+
+        <?php if (!empty($fieldErrors['name'])): ?>
+          <div class="field-error"><?php echo htmlspecialchars($fieldErrors['name']); ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($profileError['name']) && $profileError['name'] === 'success'): ?>
+          <div class="success"><?php echo htmlspecialchars('Успешно променихте името.'); ?></div>
+        <?php endif; ?>
+
         <button class="submit primary" type="submit">Запази</button>
       </form>
     </section>
@@ -271,8 +288,17 @@ $errors = [
         <h2>Имейл</h2>
       </header>
 
-      <form method="post" action="/api/profile/update-email.php">
-        <input id="email" name="email" type="email" required value="<?= h($userEmail) ?>">
+      <form method="post" action="./api/update-email.php" novalidate>
+        <input id="email" name="email" type="email" value="<?= h($oldField['email'] ?? $userEmail) ?>">
+
+        <?php if (!empty($fieldErrors['email'])): ?>
+          <div class="field-error"><?php echo htmlspecialchars($fieldErrors['email']); ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($profileError['email']) && $profileError['email'] === 'success'): ?>
+          <div class="success"><?php echo htmlspecialchars('Успешно променихте имейла.'); ?></div>
+        <?php endif; ?>
+
         <button class="submit primary" type="submit">Запази</button>
       </form>
     </section>
@@ -283,12 +309,24 @@ $errors = [
         <h2>Парола</h2>
       </header>
 
-      <form method="post" action="/api/profile/update-password.php">
+      <form method="post" action="./api/update-password.php" novalidate>
         <label for="password">Нова парола</label>
-        <input id="password" name="password" type="password" minlength="8" required>
+        <input id="password" name="password" type="password">
+
+        <?php if (!empty($fieldErrors['password'])): ?>
+          <div class="field-error"><?php echo htmlspecialchars($fieldErrors['password']); ?></div>
+        <?php endif; ?>
 
         <label for="password2">Потвърди парола</label>
-        <input id="password2" name="password2" type="password" minlength="8" required>
+        <input id="password2" name="password2" type="password">
+
+        <?php if (!empty($fieldErrors['password2'])): ?>
+          <div class="field-error"><?php echo htmlspecialchars($fieldErrors['password2']); ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($profileError['password2']) && $profileError['password2'] === 'success'): ?>
+          <div class="success"><?php echo htmlspecialchars('Успешно променихте паролата.'); ?></div>
+        <?php endif; ?>
 
         <button class="submit primary" type="submit">Смени паролата</button>
       </form>

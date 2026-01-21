@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/../core/require_login.php';
+
 session_start();
 
 // --- MOCK DATA (замени с ProjectService) ---
@@ -239,7 +241,7 @@ $projects = [
 
     <nav class="actions">
       <a class="btn secondary" href="profile-settings.php">Настройки на профила</a>
-      <a class="btn primary" href="welcome.php">Изход</a>
+      <a class="btn primary" href="./api/logout.php">Изход</a>
     </nav>
   </header>
 

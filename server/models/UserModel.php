@@ -167,7 +167,7 @@ class UserModel
     {
         $newName = $this->normalizeName($newName);
 
-        if ($this->isValidName($newName) != 0) {
+        if (!$this->isValidName($newName)) {
             throw new InvalidArgumentException('Invalid name.');
         }
 
@@ -257,11 +257,21 @@ class UserModel
         return strtolower(trim($email));
     }
 
+    private function utf8_len(string $s): int
+    {
+        // брои Unicode codepoints (символи) в UTF-8
+        if ($s === '') return 0;
+        preg_match_all('/./us', $s, $m);
+        return count($m[0]);
+    }
+
+
     private function isValidName(string $name): bool
     {
-        $len = strlen($name);
+        // $len = strlen($name);
+        $len = $this->utf8_len($name);
         if ($len < 2 || $len > 100) {
-            return 1;
+            return false;
         }
         
         // Само латински букви и интервали
