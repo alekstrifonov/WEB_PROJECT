@@ -167,7 +167,7 @@ class UserModel
     {
         $newName = $this->normalizeName($newName);
 
-        if (!$this->isValidName($newName)) {
+        if ($this->isValidName($newName) != 0) {
             throw new InvalidArgumentException('Invalid name.');
         }
 
@@ -246,8 +246,11 @@ class UserModel
 
     private function normalizeName(string $name): string
     {
-        return trim($name);
+        $name = trim($name);
+        $name = preg_replace('/\s+/u', ' ', $name);
+        return $name;
     }
+
 
     private function normalizeEmail(string $email): string
     {
@@ -257,7 +260,12 @@ class UserModel
     private function isValidName(string $name): bool
     {
         $len = strlen($name);
-        return $len >= 2 && $len <= 100;
+        if ($len < 2 || $len > 100) {
+            return 1;
+        }
+        
+        // Само латински букви и интервали
+        return (bool)preg_match('/^[\p{Latin}\p{Cyrillic} ]+$/u', $name);
     }
 
     private function isValidEmail(string $email): bool

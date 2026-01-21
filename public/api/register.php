@@ -41,27 +41,29 @@ $emailNorm = normalize_email_basic($email);
 
 // 1) Базова валидация (за да имаш field errors ВИНАГИ още преди модела)
 if ($nameTrim === '') {
-    $fieldErrors['name'] = 'Моля, въведете име.';
+    $fieldErrors['name'] = 'Въведете име.';
+} elseif (!(bool)preg_match('/^[\p{Latin}\p{Cyrillic} ]+$/u', $name)) {
+    $fieldErrors['name'] = 'Името може да състои само от букви и интервали.';
 } elseif (strlen($nameTrim) < 2 || strlen($nameTrim) > 100) {
     $fieldErrors['name'] = 'Името трябва да е между 2 и 100 символа.';
 }
 
 if ($emailNorm === '') {
-    $fieldErrors['email'] = 'Моля, въведете имейл.';
+    $fieldErrors['email'] = 'Въведете имейл.';
 } elseif (!filter_var($emailNorm, FILTER_VALIDATE_EMAIL)) {
-    $fieldErrors['email'] = 'Невалиден имейл адрес.';
+   $fieldErrors['email'] = 'Невалиден имейл адрес.';
 }
 
 if ($password === '') {
-    $fieldErrors['password'] = 'Моля, въведете парола.';
+    $fieldErrors['password'] = 'Въведете парола.';
 } elseif (strlen($password) < 6) {
-    $fieldErrors['password'] = 'Паролата трябва да е поне 6 символа.';
+   $fieldErrors['password'] = 'Паролата трябва да е поне 6 символа.';
 } elseif (strlen($password) > 200) {
-    $fieldErrors['password'] = 'Паролата е твърде дълга.';
+   $fieldErrors['password'] = 'Паролата е твърде дълга.';
 }
 
 if ($password2 === '') {
-    $fieldErrors['password2'] = 'Моля, потвърдете паролата.';
+    $fieldErrors['password2'] = 'Потвърдете паролата.';
 } elseif ($password !== $password2) {
     $fieldErrors['password2'] = 'Паролите не съвпадат.';
 }

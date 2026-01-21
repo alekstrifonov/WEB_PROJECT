@@ -1,5 +1,15 @@
 <?php
 declare(strict_types=1);
+
+session_start();
+$error = $_SESSION['login_error'] ?? '';
+$oldEmail = $_SESSION['login_old']['email'] ?? '';
+unset($_SESSION['login_error'], $_SESSION['login_old']);
+
+function h(string $s): string {
+  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+}
+
 ?>
 <!doctype html>
 <html lang="bg">
@@ -157,6 +167,11 @@ declare(strict_types=1);
       background: rgba(255,134,0,.12);
     }
 
+    .error{
+      font-size: 12px;
+      color: rgba(255,134,0,1);
+    }
+
     form{
       display:grid;
       gap: 10px;
@@ -251,10 +266,15 @@ declare(strict_types=1);
         <h1 id="login-title">Вход</h1>
       </header>
 
-      <form method="post" action="/api/auth/login.php" autocomplete="on">
+      <?php if (!empty($error)): ?>
+          <div class="error"><?php echo h($error); ?></div>
+      <?php endif; ?>
+
+      <form method="post" action="./api/login.php" autocomplete="on" novalidate>
         <fieldset>
           <label for="email">Имейл</label>
-          <input id="email" name="email" type="email" required placeholder="name@example.com"/>
+          <input id="email" name="email" type="email"
+            value="<?php echo h($oldEmail); ?>" placeholder="name@example.com"/>
 
           <label for="password">Парола</label>
           <input id="password" name="password" type="password"/>
