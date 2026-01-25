@@ -22,7 +22,7 @@ declare(strict_types=1);
 final class HtmlToBlocks
 {
     /** @var string[] */
-    private array $allowedInlineTags = ['strong','em','u','code','br','b','i'];
+    /*private array $allowedInlineTags = ['strong','em','u','code','br','b','i'];i*/
 
     /**
      * Convert list of sanitized HTML docs into blocks.

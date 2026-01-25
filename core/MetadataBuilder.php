@@ -21,8 +21,11 @@ declare(strict_types=1);
  */
 final class MetadataBuilder
 {
-    /** @var int Default maximum length of a single output line (soft wrap hint). */
-    private int $maxLineLength;
+    /**
+     * Default maximum length of a single output line (soft wrap hint).
+     * @var int
+     */
+    private $maxLineLength;
 
     public function __construct(int $maxLineLength = 90)
     {
