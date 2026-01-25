@@ -148,6 +148,16 @@ require_once __DIR__ . '/../core/require_login.php';
                             </select>
                         </div>
                     </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Лимит думи на страница (0=без лимит)</label>
+                            <input type="number" name="words" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Лимит редове на страница (0=без лимит)</label>
+                            <input type="number" name="lines" value="0">
+                        </div>
+                    </div>
                 </section>
 
                 <section class="form-section">
@@ -226,7 +236,7 @@ require_once __DIR__ . '/../core/require_login.php';
                         <span>Покажи име на файл като секция</span>
                     </label>
                     <div class="input-row" style="margin-top: 15px;">
-                        <div class="input-group">
+                        <!-- <div class="input-group">
                             <label>Норматив (за статистики)</label>
                             <select name="stats_normative">
                                 <option value="normal">Нормална машинописна</option>
@@ -237,7 +247,7 @@ require_once __DIR__ . '/../core/require_login.php';
                         <div class="input-group">
                             <label>Думи за стр.</label>
                             <input type="number" name="words_per_page" value="250">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="input-group" style="margin-top: 10px;">
                         <label>Пренасяй дълги редове</label>
