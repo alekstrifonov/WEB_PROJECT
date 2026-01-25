@@ -48,7 +48,7 @@ require_once __DIR__ . '/../core/require_login.php';
                     </div>
 
                     <div class="form-actions" style="margin-top: 20px; padding: 10px;">
-                        <button type="submit" class="btn-generate" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        <button type="button" id="generate-btn" class="btn-generate" style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
                             ГЕНЕРИРАЙ ПРЕГЛЕД
                         </button>
                     </div>
@@ -106,8 +106,6 @@ require_once __DIR__ . '/../core/require_login.php';
                                 <option value="a3">A3 (297x420 мм)</option>
                                 <option value="a4" selected>A4 (210x297 мм)</option>
                                 <option value="a5">A5 (148x210 мм)</option>
-                                <option value="letter">Letter (8.5 x 11")</option>
-                                <option value="legal">Legal (8.5 x 14")</option>
                                 <option value="custom">Персонализиран</option>
                             </select>
                         </div>
@@ -122,21 +120,21 @@ require_once __DIR__ . '/../core/require_login.php';
                     <div class="input-row">
                         <div class="input-group">
                             <label>Ширина (мм)</label>
-                            <input type="number" name="page_width" value="210">
+                            <input type="number" id="pageWidth" name="page_width" value="210" min="0">
                         </div>
                         <div class="input-group">
                             <label>Височина (мм)</label>
-                            <input type="number" name="page_height" value="297">
+                            <input type="number" id="pageHeight" name="page_height" value="297" min="0">
                         </div>
                     </div>
                     <div class="input-row">
                         <div class="input-group">
                             <label>Марж (мм)</label>
-                            <input type="number" name="margin" value="18">
+                            <input type="number" name="margin" value="18" min="0">
                         </div>
                         <div class="input-group">
                             <label>Шрифт (pt)</label>
-                            <input type="number" name="font_size" value="12">
+                            <input type="number" name="font_size" value="12" min="0">
                         </div>
                         <div class="input-group">
                             <label>Междуредие</label>
@@ -144,18 +142,17 @@ require_once __DIR__ . '/../core/require_login.php';
                                 <option value="normal">Нормална машинописна</option>
                                 <option value="wide">Разредена</option>
                                 <option value="tight">Сгъстена</option>
-                                <option value="custom">Персонализирана</option>
                             </select>
                         </div>
                     </div>
                     <div class="input-row">
                         <div class="input-group">
                             <label>Лимит думи на страница (0=без лимит)</label>
-                            <input type="number" name="words" value="0">
+                            <input type="number" name="words" value="0" min="0">
                         </div>
                         <div class="input-group">
                             <label>Лимит редове на страница (0=без лимит)</label>
-                            <input type="number" name="lines" value="0">
+                            <input type="number" name="lines" value="0" min="0">
                         </div>
                     </div>
                 </section>
@@ -215,10 +212,6 @@ require_once __DIR__ . '/../core/require_login.php';
                             </select>
                         </div>
                     </div>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="show_line_numbers_print" value="1" checked>
-                        <span>Покажи номерата на редове при печат</span>
-                    </label>
                 </section>
 
                 <section class="form-section">
@@ -268,7 +261,8 @@ require_once __DIR__ . '/../core/require_login.php';
     </main>
 
     <script src="assets/PreviewPane.js"></script>
-    <script src="assets/SubmitForm.js"></script>
+    <!-- <script src="assets/SubmitForm.js"></script> -->
     <script src="assets/FileUploader.js"></script>
+    <script src="assets/PageToggle.js"></script>
 </body>
 </html>

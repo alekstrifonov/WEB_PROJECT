@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/HtmlReader.php';
+require_once __DIR__ . '/HtmlSanitizer.php';
 require_once __DIR__ . '/HtmlToBlocks.php';
 require_once __DIR__ . '/SectionRules.php';
 require_once __DIR__ . '/TextNormalizer.php';
@@ -30,6 +32,8 @@ final class DocumentEngine
 
     public function __construct()
     {
+        $this->htmlReader = new HtmlReader();
+        $this->htmlSanitizer = new HtmlSanitizer();
         $this->htmlToBlocks = new HtmlToBlocks();
         $this->sectionRules = new SectionRules();
         $this->textNormalizer = new TextNormalizer();
@@ -53,8 +57,14 @@ final class DocumentEngine
         $settings = $input['settings'] ?? [];
         $meta = $input['meta'] ?? [];
 
+        // Read HTML
+        $raw_htmls = $this->htmlReader->read($htmls);
+
+        // Sanitize HTML
+        $cleaned_htmls = $this->htmlSanitizer->convert($raw_htmls);
+
         // Convert HTML to blocks
-        $documents = $this->htmlToBlocks->convert($htmls);
+        $documents = $this->htmlToBlocks->convert($cleaned_htmls);
 
         // Apply section rules
         $documents = $this->sectionRules->applyBreakRules($documents, $settings);

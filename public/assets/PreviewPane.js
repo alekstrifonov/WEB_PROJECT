@@ -70,7 +70,36 @@ function renderPreview(data) {
     });
 }
 
+async function displaySettings() {
+    const form = document.getElementById("print-form"); // сложи реалното id
+    console.log(form)
+    const fd = new FormData(form);
+
+    // НЕ е задължително, защото endpoint-ът го добавя,
+    // но е ок да го има:
+    fd.set("generate_preview", "1");
+
+    const res = await fetch("./api/process-html.php", {
+        method: "POST",
+        body: fd,
+    });
+
+    const json = await res.json();
+
+    if (!json.ok) {
+        console.error(json.error);
+        return;
+    }
+
+    console.log("Preview data:", json.data);
+    return json.data;
+}
+
 // Run when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     renderPreview(mockJsonData);
+
+    const btn = document.getElementById("generate-btn");
+    if (btn) btn.addEventListener("click", displaySettings);
 });
+

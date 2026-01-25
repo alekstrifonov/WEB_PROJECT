@@ -1,6 +1,14 @@
 class FileUploader {
     constructor() {
+        // const file = new File(
+        // ["<html><body>Test</body></html>"],
+        // "test.html",
+        // { type: "text/html" }
+        // );
+
         this.allFiles = [];
+        // this.allFiles.push(file);
+        
         this.fileInput = document.getElementById('file-explorer');
         this.dropZone = document.querySelector('.upload-zone');
         this.fileListUI = document.getElementById('file-list');
@@ -14,8 +22,16 @@ class FileUploader {
         ['dragover', 'drop'].forEach(name => {
             this.dropZone.addEventListener(name, (e) => e.preventDefault());
         });
-        this.dropZone.addEventListener('drop', (e) => this.addFiles(e.dataTransfer.files));
+        this.dropZone.addEventListener('drop', (e) => {
+            this.addFiles(e.dataTransfer.files)
+        });
         this.fileInput.addEventListener('change', (e) => this.addFiles(e.target.files));
+
+        this.submitBtn.disabled = true;
+        this.submitBtn.style.opacity = "0.5";
+        this.submitBtn.style.cursor = "not-allowed";
+
+        this.render();
     }
 
     addFiles(newFiles) {

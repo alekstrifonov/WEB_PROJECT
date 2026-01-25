@@ -55,8 +55,8 @@ final class HtmlReader
      *
      * @param array $files The subarray from $_FILES, e.g. $_FILES['files']
      * @return array<int, array<string, mixed>>
-     */
-    public function readFromUploadedFiles(array $files): array
+    */
+    public function read(array $files): array
     {
         $normalized = $this->normalizeFilesArray($files);
 
