@@ -2,29 +2,47 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../core/require_login.php';
+require_once __DIR__ . '/../config/db_connect.php';
+require_once __DIR__ . '/../server/models/ProjectModel.php';
 
 session_start();
 
 // --- MOCK DATA (замени с ProjectService) ---
 $userName = $_SESSION['user_name'] ?? 'Потребител';
+$userId = $_SESSION['user_id'];
 
 // Примерен формат, който ProjectService::listByUser() би върнал
-$projects = [
-  [
-    'id' => 1,
-    'title' => 'Реферат по Уеб технологии',
-    'created_at' => '2026-01-03',
-    'updated_at' => '2026-01-05'
-  ],
-  [
-    'id' => 2,
-    'title' => 'HTML код – лабораторно',
-    'created_at' => '2026-01-02',
-    'updated_at' => '2026-01-04'
-  ]
-];
+// $projects = [
+//   [
+//     'id' => 1,
+//     'title' => 'Реферат по Уеб технологии',
+//     'created_at' => '2026-01-03',
+//     'updated_at' => '2026-01-05'
+//   ],
+//   [
+//     'id' => 2,
+//     'title' => 'HTML код – лабораторно',
+//     'created_at' => '2026-01-02',
+//     'updated_at' => '2026-01-04'
+//   ]
+// ];
 // Ако искаш да тестваш празно състояние:
 // $projects = [];
+
+
+$projectModel = new ProjectModel($pdo);
+$list = $projectModel->listByUser($userId);
+
+$projects = [];
+foreach ($list as $project) {
+  $projects[] = [
+    'id' => $project['id'],
+    'title' => $project['name'],
+    'created_at' => $project['created_at'],
+    'updated_at' => $project['updated_at']
+  ];
+}
+
 ?>
 <!doctype html>
 <html lang="bg">
@@ -227,6 +245,39 @@ $projects = [
       flex-wrap: wrap;
       gap: 10px;
     }
+
+    .btn.danger{
+      background: rgba(255, 77, 77, .10);
+      color: #b91c1c;
+      border-color: rgba(255, 77, 77, .28);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn.danger:hover{
+      background: rgba(255, 77, 77, .16);
+      border-color: rgba(255, 77, 77, .45);
+    }
+
+    /* Fix: бутоните да са плътно един до друг */
+    .project .actions{
+      display: inline-flex;         /* вместо flex (да не се разтяга по ширина) */
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-end;    /* важно: да НЕ е space-between */
+      flex: 0 0 auto;               /* да не взима свободното място */
+      width: auto;                  /* да не става 100% */
+    }
+
+    /* Допълнителна стабилизация за layout-а */
+    .project > div:first-child{
+      flex: 1 1 auto;               /* заглавието взима останалото място */
+      min-width: 0;                 /* позволява да се свива при дълги заглавия */
+    }
+
+    .is-hidden { display: none !important; }
+
   </style>
 </head>
 
@@ -259,13 +310,7 @@ $projects = [
         <a class="btn primary" href="editor.php">Нов проект</a>
       </header>
 
-      <?php if (empty($projects)): ?>
-        <div class="empty">
-          Все още нямаш запазени проекти.<br>
-          Създай първия си проект.
-        </div>
-      <?php else: ?>
-        <ul class="project-list">
+      <ul class="project-list <?= empty($projects) ? 'is-hidden' : '' ?>">
           <?php foreach ($projects as $p): ?>
             <li class="project">
               <div>
@@ -276,15 +321,30 @@ $projects = [
                 </small>
               </div>
               <div class="actions">
-                <a class="btn secondary" href="editor.php?project_id=<?= (int)$p['id'] ?>">
+                <a class="btn secondary" href="editor.php?project_id=<?= (int)$p['id'] ?>&project_name=<?= (string)$p['title'] ?>">
                   Отвори
                 </a>
               </div>
+
+              <button
+                type="button"
+                class="btn danger"
+                data-project-id="<?= (int)$p['id'] ?>"
+                aria-label="Изтрий проект"
+                title="Изтрий">
+                  Изтрий
+              </button>
             </li>
           <?php endforeach; ?>
         </ul>
-      <?php endif; ?>
+          
+        <div class="empty <?= empty($projects) ? '' : 'is-hidden' ?>">
+          Все още нямаш запазени проекти.<br>
+          Създай първия си проект.
+        </div>
     </section>
   </main>
+
+  <script src="assets/RemoveProject.js"></script>
 </body>
 </html>

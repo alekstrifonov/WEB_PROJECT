@@ -83,7 +83,7 @@ try {
     $userId = $userModel->register($nameTrim, $emailNorm, $password);
 
     // Успех -> към login (смени при нужда)
-    header('Location: ../login.php?registered=1');
+    header('Location: ../login.php');
     exit;
 
 } catch (InvalidArgumentException $e) {

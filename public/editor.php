@@ -23,9 +23,13 @@ require_once __DIR__ . '/../core/require_login.php';
                 <button type="button" class="btn-reset">Нулиране</button>
                 <button type="button" class="btn-save">Запази</button>
                 <div class="account-area">
-                    <div class="account-icon">
+                    <!-- <div class="account-icon">
                         <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                    </div>
+                    </div> -->
+
+                    <a href="dashboard.php" class="account-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>   
+                    </a>
                 </div>
             </div>
         </div>
@@ -260,9 +264,28 @@ require_once __DIR__ . '/../core/require_login.php';
         </section>
     </main>
 
+    <!-- Save Project Modal -->
+    <div id="saveProjectModal" class="modal-overlay">
+        <div class="modal-window">
+            <h2>Запази проект</h2>
+            
+            <div id="saveModalMsg" class="modal-msg" style="display:none;"></div>
+
+            <div class="input-group">
+                <!-- <label for="projectNameInput">Име</label> -->
+                <input type="text" id="projectNameInput" placeholder="Въведи име на проекта">
+            </div>
+
+            <div class="modal-actions">
+                <button id="saveModalCancel" type="button" class="btn-reset">Отказ</button>
+                <button id="saveModalConfirm" type="button" class="btn-save">Запази</button>
+            </div>
+        </div>
+    </div>
+
     <script src="assets/PreviewPane.js"></script>
-    <!-- <script src="assets/SubmitForm.js"></script> -->
     <script src="assets/FileUploader.js"></script>
     <script src="assets/PageToggle.js"></script>
+    <script src="assets/SaveProject.js"></script>
 </body>
 </html>

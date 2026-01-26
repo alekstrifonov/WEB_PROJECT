@@ -35,6 +35,28 @@ try {
     ) ENGINE=InnoDB;";
 
   $pdo->exec($sql);
+
+  $sql = "CREATE TABLE IF NOT EXISTS projects (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+        user_id INT NOT NULL,
+
+        name VARCHAR(255) NOT NULL,
+        payload JSON NOT NULL,
+
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+        CONSTRAINT fk_projects_user
+            FOREIGN KEY (user_id) REFERENCES users(id)
+            ON DELETE CASCADE,
+
+        INDEX idx_projects_user_id (user_id),
+
+        CHECK (JSON_VALID(payload))
+    ) ENGINE=InnoDB;";
+
+    $pdo->exec($sql);
 } catch (PDOException $e) {
   // During a presentation, it's helpful to see the actual error if it fails
   http_response_code(500);

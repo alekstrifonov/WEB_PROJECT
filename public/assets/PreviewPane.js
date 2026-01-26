@@ -95,11 +95,39 @@ async function displaySettings() {
     return json.data;
 }
 
+
 // Run when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     renderPreview(mockJsonData);
 
+    //======================================================
+
     const btn = document.getElementById("generate-btn");
     if (btn) btn.addEventListener("click", displaySettings);
+
+    //=======================================================
+
+    const headerSaveBtn = document.querySelector(".btn-save");
+    
+    const modal = document.getElementById("saveProjectModal");
+    const cancelBtn = document.getElementById("saveModalCancel");
+
+    if (headerSaveBtn) {
+        headerSaveBtn.addEventListener("click", () => {
+            modal.classList.add("active");
+        });
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+            modal.classList.remove("active");
+        });
+    }
+
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.classList.remove("active");
+        }
+    });
 });
 
