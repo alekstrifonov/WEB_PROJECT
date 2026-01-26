@@ -285,7 +285,8 @@ require_once __DIR__ . '/../core/require_login.php';
 
     <script src="assets/PreviewPane.js"></script>
     <script src="assets/FileUploader.js"></script>
-    <script src="assets/PageToggle.js"></script>
+    <script src="assets/FillForm.js"></script>
     <script src="assets/SaveProject.js"></script>
+    <script src="assets/PageToggle.js"></script>
 </body>
 </html>

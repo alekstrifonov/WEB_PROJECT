@@ -434,3 +434,8 @@ section:nth-of-type(5) .input-group {
     background: rgba(117, 253, 139, 0.06);
     color: #bfffd0;
 }
+
+input.is-locked{
+  opacity: .7;
+  cursor: not-allowed;
+}

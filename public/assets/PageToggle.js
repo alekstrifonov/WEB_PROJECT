@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const v = String(pageSize.value || '').toLowerCase();
 
     if (v === 'custom') {
-      w.disabled = false;
-      h.disabled = false;
-      w.removeAttribute('aria-disabled');
-      h.removeAttribute('aria-disabled');
+      w.readOnly = false;
+      h.readOnly = false;
+
+      w.classList.remove("is-locked");
+      h.classList.remove("is-locked");
       return;
     }
 
@@ -30,10 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
       h.value = preset.h;
     }
 
-    w.disabled = true;
-    h.disabled = true;
-    w.setAttribute('aria-disabled', 'true');
-    h.setAttribute('aria-disabled', 'true');
+    w.readOnly = true;
+    h.readOnly = true;
+
+    w.classList.add("is-locked");
+    h.classList.add("is-locked");
   }
 
   pageSize.addEventListener('change', applySizeLock);

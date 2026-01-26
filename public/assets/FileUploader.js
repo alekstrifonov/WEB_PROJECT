@@ -108,4 +108,4 @@ class FileUploader {
     }
 }
 
-new FileUploader();
+window.fileUploader = new FileUploader();
