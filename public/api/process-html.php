@@ -108,8 +108,8 @@ function aggregateInput(): ?array
 function process_html()
 {
     $input = aggregateInput();
-    // $document_engine = new DocumentEngine();
-    // $html_to_render = $document_engine->process($input);
+    $document_engine = new DocumentEngine();
+    $html_to_render = $document_engine->process($input);
     // РЕНДЕРВАМЕ HTML СТРАНИЦАТА И Я ВРЪЩАМЕ НА ФРОНТ-ЕНДА.
     // КАК СЕ РЕНДЕРВА?
     // АЙДЕ ДА ГО РЕНДЕРВАМЕ В JAVASCRIPT-А

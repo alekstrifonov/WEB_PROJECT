@@ -73,6 +73,27 @@ final class HtmlReader
         return $out;
     }
 
+    public function read_file(string $file_name): string
+    {
+        if ($file_name === '' || !is_uploaded_file($file_name)) {
+            return 'Липсва временен файл (tmp_name) или upload не е валиден.';
+        }
+
+        $raw = @file_get_contents($file_name);
+        if ($raw === false) {
+            return 'Неуспешно прочитане на временния файл.';
+        }
+
+        // Normalize to UTF-8 text
+        $warnings = [];
+        $html = $this->toUtf8($raw, $warnings);
+
+        // Normalize line endings
+        $html = $this->normalizeLineEndings($html);
+
+        return $html;
+    }
+
     // -------------------------
     // Internal
     // -------------------------

@@ -152,6 +152,8 @@ declare(strict_types=1);
  * { ok: true, project_id: 123 }
  */
 
+require_once __DIR__ . '/../../core/HtmlReader.php';
+
 header('Content-Type: application/json; charset=utf-8');
 
 // DEV ONLY
@@ -191,6 +193,9 @@ function json_ok(array $data = []): void {
 
 function aggregateInput(): ?array
 {
+
+    $htmlReader = new HtmlReader();
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['generate_preview'])) {
         return null;
     }
@@ -217,7 +222,7 @@ function aggregateInput(): ?array
             $htmls[] = [
                 "name"     => $_FILES['html_files']['name'][$i],
                 "type"     => $_FILES['html_files']['type'][$i],
-                "tmp_name" => $_FILES['html_files']['tmp_name'][$i],
+                "html"     => $htmlReader->read_file($_FILES['html_files']['tmp_name'][$i]),
                 "error"    => $_FILES['html_files']['error'][$i],
                 "size"     => $_FILES['html_files']['size'][$i],
             ];
