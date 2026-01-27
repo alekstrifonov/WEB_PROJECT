@@ -127,6 +127,8 @@ final class PageSpec
     /** височина на празен ред в mm */
     public float $blankLineHeightMm;
 
+    public int $lineSpacing;
+
 
     public static function fromSettings(array $settings): self
     {
@@ -204,8 +206,6 @@ final class PageSpec
 
         if ($maxChars < 20) $maxChars = 20;
 
-        error_log("fontSize={$fontSize} usableWidthMm={$usableWidthMm} maxChars={$maxChars} wrapLines=" . ($wrapLines ? 'yes' : 'no'));
-
         $spec = new self();
         $spec->pageWidthMm = $w;
         $spec->pageHeightMm = $h;
@@ -223,6 +223,8 @@ final class PageSpec
         $spec->usableHeightMm = $usableHeightMm;
         $spec->textLineHeightMm = $textLineHeightMm;
         $spec->blankLineHeightMm = $blankLineHeightMm;
+
+        $spec->lineSpacing = $lineSpacing;
 
         return $spec;
     }
@@ -1023,6 +1025,17 @@ final class TextUtil
         return $out;
     }
 
+    public static function rowToPlainText($row): string
+    {
+        if (is_array($row)) {
+            if (!empty($row['is_html'])) {
+                return strip_tags((string)($row['html'] ?? ''));
+            }
+            return (string)($row['text'] ?? '');
+        }
+        return (string)$row;
+    }
+
     private static function hardSplit(string $s, int $maxChars): array
     {
         $out = [];
@@ -1063,7 +1076,7 @@ final class DocumentStats
             $lines = $p['lines'] ?? [];
             $totalLines += count($lines);
             foreach ($lines as $l) {
-                $totalWords += TextUtil::countWords((string)$l);
+                $totalWords += TextUtil::countWords(TextUtil::rowToPlainText($l));
             }
         }
 
@@ -1084,7 +1097,7 @@ final class SpecialPages
         $course = (string)($meta['course'] ?? '');
         $cite   = (string)($meta['citation_template'] ?? '');
 
-        $sep = str_repeat('─', min(60, $spec->wrapLines ? $spec->maxCharsPerLine : 60));
+        $sep = str_repeat('─', ($spec->wrapLines ? $spec->maxCharsPerLine : 60));
 
         $lines = [
             'М Е Т А Д А Н Н И',
@@ -1108,12 +1121,24 @@ final class SpecialPages
 
     public static function statisticsPage(PageSpec $spec, DocumentStats $stats): array
     {
+        $sep = str_repeat('─', ($spec->wrapLines ? $spec->maxCharsPerLine : 60));
+
+        $spacing_map = [
+            1 => "сгъстена",
+            2 => "нормална",
+            3 => "разредена",
+        ];
+
         $lines = [
-            'Statistics',
-            'Total Pages: ' . $stats->totalPages,
-            'Total Lines: ' . $stats->totalLines,
-            'Total Words: ' . $stats->totalWords,
-            'Avg Lines per Page: ' . number_format($stats->avgLinesPerPage, 2, '.', ''),
+            'С Т А Т И С Т И К И',
+            $sep,
+            'Страници: ' . $stats->totalPages,
+            'Редове: ' . $stats->totalLines,
+            'Думи: ' . $stats->totalWords,
+            'Среден брой редове на страница: ' . number_format($stats->avgLinesPerPage, 2, '.', ''),
+            'Тип машинописна странциа: ' . $spacing_map[$spec->lineSpacing],
+            'Височина на редовете: ' . number_format($spec->textLineHeightMm, 2, '.', '') . 'мм',
+            'Интервал между редове: ' . number_format($spec->blankLineHeightMm, 2, '.', '') . 'мм',
         ];
 
         // ако wrap_lines е yes, все пак няма какво да се wrap-ва много тук
