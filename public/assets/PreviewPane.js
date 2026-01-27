@@ -1,133 +1,108 @@
-/**
- * Hardcoded JSON data
- */
-const mockJsonData = {
-    "title": "Техническа Документация",
-    "author": "Георги Петров",
-    "htmlContent": `
-        <div class="document-wrapper">
-            <h1 style="text-align: center; color: #27187E;">ПРОТОКОЛ ЗА ПРИЕМАНЕ</h1>
-            <p style="text-align: right;"><strong>Дата:</strong> 04.01.2026г.</p>
-            <hr>
-            <p>Този документ е генериран автоматично за целите на преглед преди печат. 
-            Системата преобразува суров HTML в JSON формат и го визуализира върху симулиран А4 лист.</p>
-            
-            <h3>Основни параметри:</h3>
-            <ul>
-                <li><strong>Шрифт:</strong> Times New Roman (12pt)</li>
-                <li><strong>Междуредие:</strong> 1.5 (Машинописно)</li>
-                <li><strong>Маржове:</strong> 18мм</li>
-            </ul>
-
-            <p style="margin-top: 40px;">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-            
-            <div style="margin-top: 100px; display: flex; justify-content: space-between;">
-                <span>Изготвил: ....................</span>
-                <span>Проверил: ....................</span>
-            </div>
-        </div>
-    `
-};
-
-/**
- * Renders the JSON content into the new UI
- */
-function renderPreview(data) {
-    const previewArea = document.querySelector('.preview-area');
-    
+function renderPreviewHtml(htmlDoc) {
+    const previewArea = document.querySelector(".preview-area");
     if (!previewArea) return;
 
-    // 1. Setup the preview area for scrolling
-    // We override the flex alignment to 'flex-start' so the paper starts at the top
     previewArea.style.overflowY = "auto";
-    previewArea.style.alignItems = "flex-start";
-    previewArea.style.padding = "40px 0";
+    previewArea.style.alignItems = "stretch";
+    previewArea.style.justifyContent = "stretch";
+    previewArea.style.padding = "0";
 
-    // 2. Inject the paper sheet
-    previewArea.innerHTML = `
-        <div id="paper-sheet">
-            ${data.htmlContent}
-        </div>
-    `;
+    previewArea.innerHTML = "";
 
-    // 3. Apply the Paper Styles
-    const paper = document.getElementById('paper-sheet');
-    Object.assign(paper.style, {
-        backgroundColor: "white",
-        color: "black",
-        width: "210mm",
-        minHeight: "297mm",
-        padding: "20mm",
-        margin: "0 auto", // Center horizontally
-        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-        boxSizing: "border-box",
-        fontFamily: "'Times New Roman', serif",
-        lineHeight: "1.5"
-    });
+    const iframe = document.createElement("iframe");
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "0";
+    iframe.style.display = "block";
+
+    // Изолация на целия HTML документ (head/body/styles)
+    iframe.srcdoc = htmlDoc;
+
+    previewArea.appendChild(iframe);
 }
 
-async function displaySettings() {
-    const form = document.getElementById("print-form"); // сложи реалното id
-    console.log(form)
-    const fd = new FormData(form);
+function renderPreviewError(message) {
+    const previewArea = document.querySelector(".preview-area");
+    if (!previewArea) return;
 
-    // НЕ е задължително, защото endpoint-ът го добавя,
-    // но е ок да го има:
-    fd.set("generate_preview", "1");
+    previewArea.style.overflowY = "auto";
+    previewArea.style.alignItems = "center";
+    previewArea.style.justifyContent = "center";
+    previewArea.style.padding = "40px 20px";
 
-    const res = await fetch("./api/process-html.php", {
-        method: "POST",
-        body: fd,
-    });
+    previewArea.innerHTML = `
+        <div style="
+            color: var(--orange);
+            font-size: 0.95rem;
+            opacity: 0.95;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,134,0,0.35);
+            padding: 14px 16px;
+            border-radius: 12px;
+            max-width: 520px;
+        ">
+            ${message}
+        </div>
+    `;
+}
 
-    const json = await res.json();
-
-    if (!json.ok) {
-        console.error(json.error);
+async function generatePreview() {
+    const form = document.getElementById("print-form");
+    if (!form) {
+        renderPreviewError("Не намирам form#print-form.");
         return;
     }
 
-    console.log("Preview data:", json.data);
-    return json.data;
+    const fd = new FormData(form);
+    fd.set("generate_preview", "1");
+
+    try {
+        const res = await fetch("./api/process-html.php", {
+            method: "POST",
+            body: fd,
+        });
+
+        const json = await res.json();
+
+        if (!json.ok) {
+            renderPreviewError(json.error || "Грешка при генериране на преглед.");
+            return;
+        }
+
+        renderPreviewHtml(json.html);
+    } catch (e) {
+        renderPreviewError("Грешка: " + (e?.message || e));
+        console.error(e);
+    }
 }
 
+function printPreview() {
+  const iframe = document.querySelector(".preview-area iframe");
+  if (!iframe || !iframe.contentWindow) {
+    alert("Няма генериран преглед за принтиране.");
+    return;
+  }
 
-// Run when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    renderPreview(mockJsonData);
+  // ако srcdoc току-що е сменен, изчакай load
+//   iframe.addEventListener("load", () => {
+//     iframe.contentWindow.focus();
+//     iframe.contentWindow.print();
+//   }, { once: true });
 
-    //======================================================
+  // ако вече е зареден (в повечето случаи), това пак работи
+  try {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  } catch (_) {}
+}
+document.addEventListener("DOMContentLoaded", () => {
+    const generate_btn = document.getElementById("generate-btn");
+    if (!generate_btn) return;
 
-    const btn = document.getElementById("generate-btn");
-    if (btn) btn.addEventListener("click", displaySettings);
+    generate_btn.addEventListener("click", generatePreview);
 
-    //=======================================================
+    const print_btn = document.getElementById("print-btn");
+    if (!print_btn) return;
 
-    const headerSaveBtn = document.querySelector(".btn-save");
-    
-    const modal = document.getElementById("saveProjectModal");
-    const cancelBtn = document.getElementById("saveModalCancel");
-
-    if (headerSaveBtn) {
-        headerSaveBtn.addEventListener("click", () => {
-            modal.classList.add("active");
-        });
-    }
-
-    if (cancelBtn) {
-        cancelBtn.addEventListener("click", () => {
-            modal.classList.remove("active");
-        });
-    }
-
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.classList.remove("active");
-        }
-    });
+    print_btn.addEventListener("click", printPreview);
 });
-

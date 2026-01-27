@@ -20,7 +20,7 @@ require_once __DIR__ . '/../core/require_login.php';
             </div>
         
             <div class="header-actions">
-                <button type="button" class="btn-reset">Нулиране</button>
+                <button type="button" class="btn-reset" id="print-btn">Принтиране</button>
                 <button type="button" class="btn-save">Запази</button>
                 <div class="account-area">
                     <!-- <div class="account-icon">
@@ -72,15 +72,15 @@ require_once __DIR__ . '/../core/require_login.php';
                     </div>
                     <div class="input-row">
                         <div class="input-group">
-                            <label>Курс / група</label>
-                            <input type="text" name="course" placeholder="Напр. 3 курс">
+                            <label>Допълнителна информация</label>
+                            <input type="text" name="course" placeholder="Напр. версия 2.0">
                         </div>
                     </div>
-                    <div class="input-group">
+                    <!-- <div class="input-group">
                         <label>Цитиране (шаблон)</label>
                         <textarea name="citation_template">{author}. {title}. Източник: {source}. Достъп: {access}</textarea>
                         <small>Поддържани плейсхолдъри: {author}, {title}, {source}, {access}</small>
-                    </div>
+                    </div> -->
                     <div class="input-row">
                         <div class="input-group">
                             <label>Метаданни страница</label>
@@ -150,10 +150,10 @@ require_once __DIR__ . '/../core/require_login.php';
                         </div>
                     </div>
                     <div class="input-row">
-                        <div class="input-group">
+                        <!-- <div class="input-group">
                             <label>Лимит думи на страница (0=без лимит)</label>
                             <input type="number" name="words" value="0" min="0">
-                        </div>
+                        </div> -->
                         <div class="input-group">
                             <label>Лимит редове на страница (0=без лимит)</label>
                             <input type="number" name="lines" value="0" min="0">
@@ -197,7 +197,7 @@ require_once __DIR__ . '/../core/require_login.php';
                     <div class="input-group">
                         <label>Шаблон за номер (footer/header)</label>
                         <input type="text" name="page_number_template" value="{author} • {title} • стр. {page}/{total}">
-                        <small>Плейсхолдъри: {page}, {total}, {title}, {author}, {fn}, {file}, {date}</small>
+                        <small>Плейсхолдъри: {page}, {total}, {title}, {author}, {file}, {date}</small>
                     </div>
                     <div class="input-row">
                         <div class="input-group">
@@ -208,22 +208,51 @@ require_once __DIR__ . '/../core/require_login.php';
                                 <option value="doc">За целия документ</option>
                             </select>
                         </div>
-                        <div class="input-group">
+                        <!-- <div class="input-group">
                             <label>Къде</label>
                             <select name="line_numbers_placement">
                                 <option value="margin">Вляво</option>
                                 <option value="inline">В началото на реда</option>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
                 <section class="form-section">
                     <h2>СЕКЦИИ</h2>
-                    <label class="custom-checkbox">
+                    <!-- <label class="custom-checkbox">
                         <input type="checkbox" name="new_page_on_header" value="1" checked>
                         <span>Започвай нова страница при заглавие (H1-H6)</span>
-                    </label>
+                    </label> -->
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <label class="custom-checkbox" style="margin: 0;">Започвай нова страница при заглавия</label>
+                        <div class="checkbox-row" style="margin-top: 8px; flex-wrap: wrap; gap: 8px;">
+                            <label class="custom-checkbox" style="margin: 0;">
+                                <input type="checkbox" name="header_page_break_levels[]" value="1">
+                                <span>H1</span>
+                            </label>
+                            <label class="custom-checkbox" style="margin: 0;">
+                                <input type="checkbox" name="header_page_break_levels[]" value="2">
+                                <span>H2</span>
+                            </label>
+                            <label class="custom-checkbox" style="margin: 0;">
+                                <input type="checkbox" name="header_page_break_levels[]" value="3">
+                                <span>H3</span>
+                            </label>
+                            <label class="custom-checkbox" style="margin: 0;">
+                                <input type="checkbox" name="header_page_break_levels[]" value="4">
+                                <span>H4</span>
+                            </label>
+                            <label class="custom-checkbox" style="margin: 0;">
+                                <input type="checkbox" name="header_page_break_levels[]" value="5">
+                                <span>H5</span>
+                            </label>
+                            <label class="custom-checkbox" style="margin: 0;">
+                                <input type="checkbox" name="header_page_break_levels[]" value="6">
+                                <span>H6</span>
+                            </label>
+                        </div>
+                    </div>
                     <label class="custom-checkbox" style="margin-top: 8px;">
                         <input type="checkbox" name="new_page_on_file" value="1" checked>
                         <span>Всеки файл започва на нова страница</span>
@@ -232,8 +261,8 @@ require_once __DIR__ . '/../core/require_login.php';
                         <input type="checkbox" name="file_name_as_section" value="1" checked>
                         <span>Покажи име на файл като секция</span>
                     </label>
-                    <div class="input-row" style="margin-top: 15px;">
-                        <!-- <div class="input-group">
+                    <!-- <div class="input-row" style="margin-top: 15px;">
+                        <div class="input-group">
                             <label>Норматив (за статистики)</label>
                             <select name="stats_normative">
                                 <option value="normal">Нормална машинописна</option>
@@ -244,7 +273,7 @@ require_once __DIR__ . '/../core/require_login.php';
                         <div class="input-group">
                             <label>Думи за стр.</label>
                             <input type="number" name="words_per_page" value="250">
-                        </div> -->
+                        </div>
                     </div>
                     <div class="input-group" style="margin-top: 10px;">
                         <label>Пренасяй дълги редове</label>
@@ -252,7 +281,7 @@ require_once __DIR__ . '/../core/require_login.php';
                             <option value="yes">Да</option>
                             <option value="no">Не</option>
                         </select>
-                    </div>
+                    </div> -->
                 </section>
             </form>
         </aside>

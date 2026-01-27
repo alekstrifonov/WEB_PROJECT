@@ -298,20 +298,6 @@ final class HtmlBlockParser
         }
     }
 
-
-    private function hasBlockChildren(\DOMElement $node): bool
-    {
-        foreach ($node->childNodes as $ch) {
-            if (!($ch instanceof \DOMElement)) continue;
-            $t = strtolower($ch->tagName);
-            if (preg_match('/^h[1-6]$/', $t)) return true;
-            if (in_array($t, ['p','div','pre','ul','ol','li','hr','table','section','article','header','footer','blockquote'], true)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private function walk(DOMNode $node, array &$blocks): void
     {
         // Raw text node (fallback)
@@ -397,25 +383,7 @@ final class HtmlBlockParser
         }
 
         // Paragraph-like containers
-        if ($tag === 'p') {
-            $html = InlineHtml::renderChildren($node);
-            if ($html !== '') {
-                $blocks[] = ['type' => 'paragraph', 'html' => $html, 'is_html' => 1];
-                $blocks[] = ['type' => 'blank'];
-            }
-            return;
-        }
-
-        // <div> може да е контейнер с други блокови елементи (h1/h2/ul/pre/...)
-        // Ако има блокови деца, НЕ го третираме като paragraph, а обхождаме децата му.
-        if ($tag === 'div') {
-            if ($this->hasBlockChildren($node)) {
-                foreach ($node->childNodes as $child) {
-                    $this->walk($child, $blocks);
-                }
-                return;
-            }
-
+        if (in_array($tag, ['p', 'div'], true)) {
             $html = InlineHtml::renderChildren($node);
             if ($html !== '') {
                 $blocks[] = ['type' => 'paragraph', 'html' => $html, 'is_html' => 1];

@@ -17,8 +17,8 @@ final class Paginator
      */
     public function paginate(array $lines, array $settings = []): array
     {
-        $linesPerPage = $settings['lines_per_page'] ?? 50;
-        $pageBreakMarker = $settings['page_break_marker'] ?? '---PAGE_BREAK---';
+        $linesPerPage = ($settings['lines'] === 0) ? 50 : $settings['lines'];
+        $pageBreakMarker = '---PAGE_BREAK---';
 
         $pages = [];
         $currentPage = [];

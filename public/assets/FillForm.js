@@ -17,6 +17,32 @@ function lineSpacingToFormValue(n) {
   return "normal";
 }
 
+function fillHeaderBreakLevels(payload) {
+  const levels = payload?.settings?.sections?.header_page_break_levels;
+
+  // всички checkbox-и H1..H6
+  const boxes = document.querySelectorAll('input[name="header_page_break_levels[]"]');
+  if (!boxes) return;
+
+  // първо ги изчистваме
+  // boxes.forEach(cb => (cb.checked = false));
+
+  // Ако няма масив (стар проект) – fallback към старото поведение:
+  // ако new_page_on_header е true -> чекни всички
+  // if (!Array.isArray(levels)) {
+  //   const legacy = payload?.settings?.sections?.new_page_on_header;
+  //   if (legacy) boxes.forEach(cb => (cb.checked = true));
+  //   return;
+  // }
+
+  // Нормализираме масива до set от string ("1".."6")
+  const set = new Set(levels.map(v => String(parseInt(v, 10))).filter(v => v >= "1" && v <= "6"));
+
+  boxes.forEach(cb => {
+    cb.checked = set.has(cb.value);
+  });
+}
+
 function fillFormFromPayload(payload) {
   const s = payload.settings || {};
   const page = s.page || {};
@@ -54,6 +80,7 @@ function fillFormFromPayload(payload) {
   setChecked('[name="new_page_on_file"]', sec.new_page_on_file === 1);
   setChecked('[name="file_name_as_section"]', sec.file_name_as_section === 1);
   setValue('[name="wrap_lines"]', sec.wrap_lines);
+  fillHeaderBreakLevels(payload);
 
   // META
   setValue('[name="title"]', meta.title);
