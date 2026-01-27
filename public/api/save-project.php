@@ -152,8 +152,6 @@ declare(strict_types=1);
  * { ok: true, project_id: 123 }
  */
 
-require_once __DIR__ . '/../../core/HtmlReader.php';
-
 header('Content-Type: application/json; charset=utf-8');
 
 // DEV ONLY
