@@ -41,7 +41,6 @@ $userModel = new UserModel($pdo);
 try {
     $userModel->updateName($userId, $name);
 
-    // синхронизираме сесията за UI
     $_SESSION['user_name'] = $name;
 
     flash_profile(

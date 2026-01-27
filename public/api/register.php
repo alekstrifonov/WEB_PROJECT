@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -39,7 +41,6 @@ $fieldErrors = [];
 $nameTrim = trim($name);
 $emailNorm = normalize_email_basic($email);
 
-// 1) Базова валидация (за да имаш field errors ВИНАГИ още преди модела)
 if ($nameTrim === '') {
     $fieldErrors['name'] = 'Въведете име.';
 } elseif (!(bool)preg_match('/^[\p{Latin}\p{Cyrillic} ]+$/u', $name)) {
@@ -68,7 +69,6 @@ if ($password2 === '') {
     $fieldErrors['password2'] = 'Паролите не съвпадат.';
 }
 
-// Ако има грешки -> връщаме обратно със fieldErrors
 if (!empty($fieldErrors)) {
     flash_back('Има грешки във формата.', $fieldErrors, [
         'name' => $nameTrim,
@@ -76,23 +76,18 @@ if (!empty($fieldErrors)) {
     ]);
 }
 
-// 2) Регистрация през модела (тук вече трябва да мине гладко)
 $userModel = new UserModel($pdo);
 
 try {
     $userId = $userModel->register($nameTrim, $emailNorm, $password);
 
-    // Успех -> към login (смени при нужда)
     header('Location: ../login.php');
     exit;
 
 } catch (InvalidArgumentException $e) {
-    // 3) Ако все пак моделът върне валидация,
-    // мапваме съобщението към подходящо поле, за да се покаже под input-а.
     $msg = $e->getMessage();
     $mapped = [];
 
-    // Мапване (работи с нашите текущи съобщения от UserModel)
     if (stripos($msg, 'name') !== false) {
         $mapped['name'] = 'Невалидно име.';
     } elseif (stripos($msg, 'email') !== false) {
@@ -102,14 +97,12 @@ try {
     }
 
     if (empty($mapped)) {
-        // ако не можем да разпознаем — обща грешка
         flash_back($msg, [], ['name' => $nameTrim, 'email' => $emailNorm]);
     }
 
     flash_back('Има грешки във формата.', $mapped, ['name' => $nameTrim, 'email' => $emailNorm]);
 
 } catch (RuntimeException $e) {
-    // Email already exists -> под полето email
     flash_back('Неуспешна регистрация.', [
         'email' => $e->getMessage(),
     ], [

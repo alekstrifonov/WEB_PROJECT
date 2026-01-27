@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../core/require_login.php';
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// MOCK DATA – замени с реално зареждане от DB
 $userName  = $_SESSION['user_name'] ?? 'Потребител';
 $userEmail = $_SESSION['user_email'] ?? 'user@example.com';
 
@@ -14,7 +15,6 @@ $fieldErrors = $_SESSION['profile_field_errors'] ?? [];
 $oldField = $_SESSION['profile_field_old'] ?? [];
 
 unset($_SESSION['profile_error'], $_SESSION['profile_field_errors'], $_SESSION['profile_field_old']);
-//unset($_SESSION['profile_field_errors'], $_SESSION['profile_field_old']);
 
 function h(string $s): string {
   return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
@@ -261,7 +261,6 @@ $errors = [
   <main>
     <h1>Настройки на профила</h1>
 
-    <!-- Change name -->
     <section class="card">
       <header>
         <h2>Име</h2>
@@ -282,7 +281,6 @@ $errors = [
       </form>
     </section>
 
-    <!-- Change email -->
     <section class="card">
       <header>
         <h2>Имейл</h2>
@@ -303,7 +301,6 @@ $errors = [
       </form>
     </section>
 
-    <!-- Change password -->
     <section class="card">
       <header>
         <h2>Парола</h2>

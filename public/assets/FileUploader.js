@@ -1,13 +1,7 @@
 class FileUploader {
     constructor() {
-        // const file = new File(
-        // ["<html><body>Test</body></html>"],
-        // "test.html",
-        // { type: "text/html" }
-        // );
 
         this.allFiles = [];
-        // this.allFiles.push(file);
         
         this.fileInput = document.getElementById('file-explorer');
         this.dropZone = document.querySelector('.upload-zone');

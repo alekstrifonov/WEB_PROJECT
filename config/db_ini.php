@@ -8,19 +8,14 @@ function db_connect_and_init(
     string $dbCharSet,
     array $options = []
 ): PDO {
-    // 1. Свързване към MySQL сървъра (без избрана база)
     $dsnServer = "mysql:host=$host;charset=$dbCharSet";
-    // $dsnServer = "mysql:host={$host};charset=utf8mb4";
     $pdoServer = new PDO($dsnServer, $username, $password, $options);
 
-    // 2. Създаване на база, ако не съществува
     db_ensure_database_exists($pdoServer, $dbName, $dbCharSet);
 
-    // 3. Свързване към конкретната база
     $dsnDatabase = "mysql:host={$host};dbname={$dbName};charset={$dbCharSet}";
     $pdo = new PDO($dsnDatabase, $username, $password, $options);
 
-    // 4. Създаване на таблици, ако не съществуват
     db_ensure_tables_exist($pdo);
 
     return $pdo;

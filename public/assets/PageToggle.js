@@ -23,8 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Заключваме за всички предварително дефинирани размери
-    // (ако искаш САМО за A3/A4/A5, смени условието на: if (v === 'a3' || v === 'a4' || v === 'a5')
     const preset = SIZES_MM[v];
     if (preset) {
       w.value = preset.w;
@@ -39,5 +37,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   pageSize.addEventListener('change', applySizeLock);
-  applySizeLock(); // при първо зареждане
+  applySizeLock();
 });

@@ -40,14 +40,12 @@ $userModel = new UserModel($pdo);
 try {
     $userModel->updateEmail($userId, $email);
 
-    // синхронизираме сесията за UI
     $_SESSION['user_email'] = $email;
 
     flash_profile(
         ['email' => 'success'], 
         ['email' => $email]);
 } catch (RuntimeException $e) {
-    // напр. Email already exists.
     flash_profile(
         ['email' => 'exists'], 
         ['email' => $email], 

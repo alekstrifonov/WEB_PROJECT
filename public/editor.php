@@ -23,9 +23,6 @@ require_once __DIR__ . '/../core/require_login.php';
                 <button type="button" class="btn-reset" id="print-btn">Принтиране</button>
                 <button type="button" class="btn-save">Запази</button>
                 <div class="account-area">
-                    <!-- <div class="account-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                    </div> -->
 
                     <a href="dashboard.php" class="account-icon">
                         <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>   
@@ -76,11 +73,6 @@ require_once __DIR__ . '/../core/require_login.php';
                             <input type="text" name="course" placeholder="Напр. версия 2.0">
                         </div>
                     </div>
-                    <!-- <div class="input-group">
-                        <label>Цитиране (шаблон)</label>
-                        <textarea name="citation_template">{author}. {title}. Източник: {source}. Достъп: {access}</textarea>
-                        <small>Поддържани плейсхолдъри: {author}, {title}, {source}, {access}</small>
-                    </div> -->
                     <div class="input-row">
                         <div class="input-group">
                             <label>Метаданни страница</label>
@@ -150,10 +142,6 @@ require_once __DIR__ . '/../core/require_login.php';
                         </div>
                     </div>
                     <div class="input-row">
-                        <!-- <div class="input-group">
-                            <label>Лимит думи на страница (0=без лимит)</label>
-                            <input type="number" name="words" value="0" min="0">
-                        </div> -->
                         <div class="input-group">
                             <label>Лимит редове на страница (0=без лимит)</label>
                             <input type="number" name="lines" value="0" min="0">
@@ -208,22 +196,11 @@ require_once __DIR__ . '/../core/require_login.php';
                                 <option value="doc">За целия документ</option>
                             </select>
                         </div>
-                        <!-- <div class="input-group">
-                            <label>Къде</label>
-                            <select name="line_numbers_placement">
-                                <option value="margin">Вляво</option>
-                                <option value="inline">В началото на реда</option>
-                            </select>
-                        </div> -->
                     </div>
                 </section>
 
                 <section class="form-section">
                     <h2>СЕКЦИИ</h2>
-                    <!-- <label class="custom-checkbox">
-                        <input type="checkbox" name="new_page_on_header" value="1" checked>
-                        <span>Започвай нова страница при заглавие (H1-H6)</span>
-                    </label> -->
                     <div class="input-group" style="margin-bottom: 10px;">
                         <label class="custom-checkbox" style="margin: 0;">Започвай нова страница при заглавия</label>
                         <div class="checkbox-row" style="margin-top: 8px; flex-wrap: wrap; gap: 8px;">
@@ -261,27 +238,6 @@ require_once __DIR__ . '/../core/require_login.php';
                         <input type="checkbox" name="file_name_as_section" value="1" checked>
                         <span>Покажи име на файл като секция</span>
                     </label>
-                    <!-- <div class="input-row" style="margin-top: 15px;">
-                        <div class="input-group">
-                            <label>Норматив (за статистики)</label>
-                            <select name="stats_normative">
-                                <option value="normal">Нормална машинописна</option>
-                                <option value="wide">Разредена</option>
-                                <option value="tight">Сгъстена</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label>Думи за стр.</label>
-                            <input type="number" name="words_per_page" value="250">
-                        </div>
-                    </div>
-                    <div class="input-group" style="margin-top: 10px;">
-                        <label>Пренасяй дълги редове</label>
-                        <select name="wrap_lines">
-                            <option value="yes">Да</option>
-                            <option value="no">Не</option>
-                        </select>
-                    </div> -->
                 </section>
             </form>
         </aside>
@@ -293,7 +249,6 @@ require_once __DIR__ . '/../core/require_login.php';
         </section>
     </main>
 
-    <!-- Save Project Modal -->
     <div id="saveProjectModal" class="modal-overlay">
         <div class="modal-window">
             <h2>Запази проект</h2>

@@ -8,9 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!projectId) return;
 
-    //   const confirmDelete = confirm("Сигурен ли си, че искаш да изтриеш този проект?");
-    //   if (!confirmDelete) return;
-
       const fd = new FormData();
       fd.set("project_id", projectId);
 
@@ -36,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // махаме проекта от списъка
         const projectItem = btn.closest(".project");
         if (projectItem) {
             projectItem.remove();

@@ -10,7 +10,6 @@ function setChecked(selector, checked) {
   el.checked = !!checked;
 }
 
-// line_spacing: в payload е 1/2/3, а във form select е normal/tight/wide
 function lineSpacingToFormValue(n) {
   if (n === 1) return "tight";
   if (n === 3) return "wide";
@@ -20,22 +19,9 @@ function lineSpacingToFormValue(n) {
 function fillHeaderBreakLevels(payload) {
   const levels = payload?.settings?.sections?.header_page_break_levels;
 
-  // всички checkbox-и H1..H6
   const boxes = document.querySelectorAll('input[name="header_page_break_levels[]"]');
   if (!boxes) return;
 
-  // първо ги изчистваме
-  // boxes.forEach(cb => (cb.checked = false));
-
-  // Ако няма масив (стар проект) – fallback към старото поведение:
-  // ако new_page_on_header е true -> чекни всички
-  // if (!Array.isArray(levels)) {
-  //   const legacy = payload?.settings?.sections?.new_page_on_header;
-  //   if (legacy) boxes.forEach(cb => (cb.checked = true));
-  //   return;
-  // }
-
-  // Нормализираме масива до set от string ("1".."6")
   const set = new Set(levels.map(v => String(parseInt(v, 10))).filter(v => v >= "1" && v <= "6"));
 
   boxes.forEach(cb => {
@@ -50,7 +36,6 @@ function fillFormFromPayload(payload) {
   const sec = s.sections || {};
   const meta = payload.meta || {};
 
-  // PAGE
   setValue('[name="page_size"]', page.page_size);
   const pageSize = document.getElementById("pageSize");
   if (pageSize) {
@@ -66,7 +51,6 @@ function fillFormFromPayload(payload) {
   setValue('[name="words"]', page.words);
   setValue('[name="lines"]', page.lines);
 
-  // PAGINATION
   setChecked('[name="show_page_numbers"]', pag.show_page_numbers === 1);
   setChecked('[name="no_number_on_first"]', pag.no_number_on_first === 1);
   setValue('[name="page_number_pos"]', pag.page_number_pos);
@@ -75,14 +59,12 @@ function fillFormFromPayload(payload) {
   setValue('[name="line_numbers_mode"]', pag.line_numbers_mode);
   setValue('[name="line_numbers_placement"]', pag.line_numbers_placement);
 
-  // SECTIONS
   setChecked('[name="new_page_on_header"]', sec.new_page_on_header === 1);
   setChecked('[name="new_page_on_file"]', sec.new_page_on_file === 1);
   setChecked('[name="file_name_as_section"]', sec.file_name_as_section === 1);
   setValue('[name="wrap_lines"]', sec.wrap_lines);
   fillHeaderBreakLevels(payload);
 
-  // META
   setValue('[name="title"]', meta.title);
   setValue('[name="author"]', meta.author);
   setValue('[name="course"]', meta.course);

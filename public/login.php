@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $error = $_SESSION['login_error'] ?? '';
 $oldEmail = $_SESSION['login_old']['email'] ?? '';
 unset($_SESSION['login_error'], $_SESSION['login_old']);
@@ -50,7 +53,6 @@ function h(string $s): string {
     a{ color: var(--indigo); text-decoration: none; }
     a:hover{ text-decoration: underline; }
 
-    /* Top bar */
     header.topbar{
       position: fixed;
       top: 0;
@@ -129,7 +131,7 @@ function h(string $s): string {
       min-height: 100%;
       display:grid;
       place-items:center;
-      padding: 92px 22px 28px; /* top padding to account for fixed header */
+      padding: 92px 22px 28px;
     }
 
     .card{
@@ -284,8 +286,6 @@ function h(string $s): string {
 
         <div class="actions-row">
           <span class="hint">Нямаш профил? <a href="register.php"><strong>Регистрирай се</strong></a></span>
-          <!-- Optional: add a "forgot password" later -->
-          <!-- <a href="/forgot.php">Забравена парола?</a> -->
         </div>
 
       </form>

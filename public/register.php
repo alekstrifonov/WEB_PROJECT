@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $flashError = $_SESSION['register_error'] ?? '';
 $flashFieldErrors = $_SESSION['register_field_errors'] ?? [];
 $old = $_SESSION['register_old'] ?? [];
 
-// изчистваме flash-а, за да не стои при refresh
 unset($_SESSION['register_error'], $_SESSION['register_field_errors'], $_SESSION['register_old']);
 
 function h(string $s): string {
@@ -58,7 +59,6 @@ function fe(array $errors, string $key): string {
     a{ color: var(--indigo); text-decoration:none; }
     a:hover{ text-decoration: underline; }
 
-    /* Top bar */
     header.topbar{
       position: fixed;
       top: 0;
@@ -250,17 +250,6 @@ function fe(array $errors, string $key): string {
       </header>
 
       <form method="post" action="./api/register.php" autocomplete="on" novalidate>
-        <!-- <label for="name">Име</label>
-        <input id="name" name="name" type="text" required>
-        
-        <label for="email">Имейл</label>
-        <input id="email" name="email" type="email" placeholder="name@example.com" required>
-
-        <label for="password">Парола</label>
-        <input id="password" name="password" type="password" minlength="8">
-
-        <label for="password2">Потвърди парола</label>
-        <input id="password2" name="password2" type="password" minlength="8"> -->
 
         <label for="name">Име</label>
         <input type="text" name="name" id="name"

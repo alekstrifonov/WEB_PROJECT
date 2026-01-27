@@ -2,7 +2,10 @@
 declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');
-session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 function json_fail(int $code, string $msg): void {
   http_response_code($code);

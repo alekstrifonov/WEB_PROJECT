@@ -78,7 +78,6 @@ declare(strict_types=1);
 
     .btn:hover{ filter: brightness(1.05); }
 
-    /* HERO FULLSCREEN */
     main{
       height: 100vh;
     }
@@ -216,7 +215,6 @@ declare(strict_types=1);
 </head>
 
 <body>
-  <!-- TOP RIGHT ACTIONS -->
   <header class="topbar">
     <div class="brand">
         <div class="logo" aria-hidden="true">⎙</div>
@@ -232,7 +230,6 @@ declare(strict_types=1);
 
   </header>
 
-  <!-- FULLSCREEN HERO -->
   <main>
     <section class="hero" aria-labelledby="site-title">
       <div class="hero-content">

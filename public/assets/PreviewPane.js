@@ -15,7 +15,6 @@ function renderPreviewHtml(htmlDoc) {
     iframe.style.border = "0";
     iframe.style.display = "block";
 
-    // Изолация на целия HTML документ (head/body/styles)
     iframe.srcdoc = htmlDoc;
 
     previewArea.appendChild(iframe);
@@ -83,13 +82,6 @@ function printPreview() {
     return;
   }
 
-  // ако srcdoc току-що е сменен, изчакай load
-//   iframe.addEventListener("load", () => {
-//     iframe.contentWindow.focus();
-//     iframe.contentWindow.print();
-//   }, { once: true });
-
-  // ако вече е зареден (в повечето случаи), това пак работи
   try {
     iframe.contentWindow.focus();
     iframe.contentWindow.print();

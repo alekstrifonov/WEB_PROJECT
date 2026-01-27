@@ -34,7 +34,7 @@ if ($password === '') {
         ['password' => ''], 
         ['password' => 'Моля, въведете парола.']);
 }
-// Политика (същата логика като преди; коригирай ако искаш)
+
 if (strlen($password) < 6 || strlen($password) > 200) {
     flash_profile(
         ['password' => 'weak'], 

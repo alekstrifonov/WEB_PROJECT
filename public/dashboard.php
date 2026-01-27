@@ -5,29 +5,12 @@ require_once __DIR__ . '/../core/require_login.php';
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../server/models/ProjectModel.php';
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// --- MOCK DATA (замени с ProjectService) ---
 $userName = $_SESSION['user_name'] ?? 'Потребител';
 $userId = $_SESSION['user_id'];
-
-// Примерен формат, който ProjectService::listByUser() би върнал
-// $projects = [
-//   [
-//     'id' => 1,
-//     'title' => 'Реферат по Уеб технологии',
-//     'created_at' => '2026-01-03',
-//     'updated_at' => '2026-01-05'
-//   ],
-//   [
-//     'id' => 2,
-//     'title' => 'HTML код – лабораторно',
-//     'created_at' => '2026-01-02',
-//     'updated_at' => '2026-01-04'
-//   ]
-// ];
-// Ако искаш да тестваш празно състояние:
-// $projects = [];
 
 
 $projectModel = new ProjectModel($pdo);
@@ -82,7 +65,6 @@ foreach ($list as $project) {
 
     a{ text-decoration:none; color: inherit; }
 
-    /* Topbar */
     header.topbar{
       position: sticky;
       top: 0;
@@ -260,20 +242,18 @@ foreach ($list as $project) {
       border-color: rgba(255, 77, 77, .45);
     }
 
-    /* Fix: бутоните да са плътно един до друг */
     .project .actions{
-      display: inline-flex;         /* вместо flex (да не се разтяга по ширина) */
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      justify-content: flex-end;    /* важно: да НЕ е space-between */
-      flex: 0 0 auto;               /* да не взима свободното място */
-      width: auto;                  /* да не става 100% */
+      justify-content: flex-end;
+      flex: 0 0 auto;
+      width: auto;
     }
 
-    /* Допълнителна стабилизация за layout-а */
     .project > div:first-child{
-      flex: 1 1 auto;               /* заглавието взима останалото място */
-      min-width: 0;                 /* позволява да се свива при дълги заглавия */
+      flex: 1 1 auto;
+      min-width: 0;
     }
 
     .is-hidden { display: none !important; }
@@ -297,13 +277,11 @@ foreach ($list as $project) {
   </header>
 
   <main>
-    <!-- Greeting -->
     <section class="welcome" aria-label="Поздрав">
       <h1>Здравей, <?= htmlspecialchars($userName) ?> 👋</h1>
       <p>Оттук можеш да управляваш своите проекти и настройки.</p>
     </section>
 
-    <!-- Projects -->
     <section class="projects" aria-labelledby="projects-title">
       <header>
         <h2 id="projects-title">Моите проекти</h2>

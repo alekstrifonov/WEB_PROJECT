@@ -336,10 +336,6 @@ section:nth-of-type(5) .input-group {
     border-radius: 10px;
 }
 
-/* ==============================
-   Modal
-============================== */
-
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -386,7 +382,6 @@ section:nth-of-type(5) .input-group {
     gap: 12px;
 }
 
-/* --- Modal form layout fix --- */
 .modal-window .input-group {
     width: 100%;
     margin-top: 10px;
