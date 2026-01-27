@@ -49,45 +49,115 @@ final class DocumentEngine
 
         $paginator = new Paginator($spec, $settings, $meta);
         $contentPages = $paginator->paginate($blocks);
+        // Stats page based on content (без meta/stats)
+        $stats = DocumentStats::fromPages($contentPages);
+
+        $blocks = $this->applyMetaAndStats($blocks, $spec, $meta, $stats);
+        $finalPages = $paginator->paginate($blocks);
 
         // Meta / Stats pages
-        $finalPages = $this->applyMetaAndStats($contentPages, $spec, $settings, $meta);
+        // $finalPages = $this->applyMetaAndStats($contentPages, $spec, $settings, $meta);
 
         // Render full printable HTML
         $renderer = new PrintHtmlRenderer($spec, $settings, $meta);
         return $renderer->render($finalPages);
     }
 
-    private function applyMetaAndStats(array $contentPages, PageSpec $spec, array $settings, array $meta): array
+    // private function applyMetaAndStats(array $contentPages, PageSpec $spec, array $settings, array $meta): array
+    // {
+    //     $metaPlacement  = (string)($meta['metadata_placement'] ?? 'none');
+    //     $statsPlacement = (string)($meta['statistics_placement'] ?? 'none');
+
+    //     $final = $contentPages;
+
+    //     // Stats page based on content (без meta/stats)
+    //     $stats = DocumentStats::fromPages($contentPages);
+
+    //     $metaPage  = ($metaPlacement !== 'none')  ? SpecialPages::metadataPage($spec, $meta) : null;
+    //     $statsPage = ($statsPlacement !== 'none') ? SpecialPages::statisticsPage($spec, $stats) : null;
+
+    //     // START: meta преди stats
+    //     if ($statsPlacement === 'start' && $statsPage) {
+    //         array_unshift($final, $statsPage);
+    //     }
+    //     if ($metaPlacement === 'start' && $metaPage) {
+    //         array_unshift($final, $metaPage);
+    //     }
+
+    //     // END: stats преди meta (meta е "последна")
+    //     if ($statsPlacement === 'end' && $statsPage) {
+    //         $final[] = $statsPage;
+    //     }
+    //     if ($metaPlacement === 'end' && $metaPage) {
+    //         $final[] = $metaPage;
+    //     }
+
+    //     return $final;
+    // }
+
+    private function applyMetaAndStats(array $blocks, PageSpec $spec, array $meta, DocumentStats $stats): array
     {
-        $metaPlacement  = (string)($meta['metadata_placement'] ?? 'none');
-        $statsPlacement = (string)($meta['statistics_placement'] ?? 'none');
+        $metaPlacement  = (string)($meta['metadata_placement'] ?? 'none');     // start|end|none
+        $statsPlacement = (string)($meta['statistics_placement'] ?? 'none');   // start|end|none
 
-        $final = $contentPages;
+        // Ако са изключени – директно връщаме
+        $metaBlocks  = [];
+        $statsBlocks = [];
 
-        // Stats page based on content (без meta/stats)
-        $stats = DocumentStats::fromPages($contentPages);
-
-        $metaPage  = ($metaPlacement !== 'none')  ? SpecialPages::metadataPage($spec, $meta) : null;
-        $statsPage = ($statsPlacement !== 'none') ? SpecialPages::statisticsPage($spec, $stats) : null;
-
-        // START: meta преди stats
-        if ($statsPlacement === 'start' && $statsPage) {
-            array_unshift($final, $statsPage);
-        }
-        if ($metaPlacement === 'start' && $metaPage) {
-            array_unshift($final, $metaPage);
+        if ($metaPlacement !== 'none') {
+            $metaBlocks = SpecialPages::metadataBlocks($spec, $meta);
         }
 
-        // END: stats преди meta (meta е "последна")
-        if ($statsPlacement === 'end' && $statsPage) {
-            $final[] = $statsPage;
-        }
-        if ($metaPlacement === 'end' && $metaPage) {
-            $final[] = $metaPage;
+        if ($statsPlacement !== 'none') {
+            $statsBlocks = SpecialPages::statisticsBlocks($spec, $stats);
         }
 
-        return $final;
+        // helper: добавя pagebreak след секция, за да е като отделна "страница/част"
+        $withBreak = function (array $sectionBlocks): array {
+            if (empty($sectionBlocks)) return [];
+            // гарантираме да не останем с pagebreak без нищо
+            return array_merge($sectionBlocks, [
+                ['type' => 'pagebreak'],
+            ]);
+        };
+
+        // Важно: ако metadata/stats са "start", искаме да са преди основния документ
+        $prefix = [];
+        if ($metaPlacement === 'start') {
+            $prefix = array_merge($prefix, $withBreak($metaBlocks));
+        }
+        if ($statsPlacement === 'start') {
+            $prefix = array_merge($prefix, $withBreak($statsBlocks));
+        }
+
+        // "end" секции – след основния документ
+        $suffix = [];
+        if ($metaPlacement === 'end') {
+            $suffix = array_merge($suffix, $withBreak($metaBlocks));
+        }
+        if ($statsPlacement === 'end') {
+            $suffix = array_merge($suffix, $withBreak($statsBlocks));
+        }
+
+        // Сглобяване
+        if (!empty($prefix)) {
+            $blocks = array_merge($prefix, $blocks);
+        }
+        if (!empty($suffix)) {
+            $blocks = array_merge($blocks, $suffix);
+        }
+
+        // Ако накрая има pagebreak, махаме го (за да не прави празна последна страница)
+        for ($i = count($blocks) - 1; $i >= 0; $i--) {
+            if (!is_array($blocks[$i])) break;
+            if (($blocks[$i]['type'] ?? '') === 'pagebreak') {
+                array_pop($blocks);
+                continue;
+            }
+            break;
+        }
+
+        return $blocks;
     }
 }
 
@@ -1088,7 +1158,38 @@ final class DocumentStats
 
 final class SpecialPages
 {
-    public static function metadataPage(PageSpec $spec, array $meta): array
+    // public static function metadataPage(PageSpec $spec, array $meta): array
+    // {
+    //     $date = date('d.m.Y H:i');
+
+    //     $title  = (string)($meta['title'] ?? '');
+    //     $author = (string)($meta['author'] ?? '');
+    //     $course = (string)($meta['course'] ?? '');
+    //     $cite   = (string)($meta['citation_template'] ?? '');
+
+    //     $sep = str_repeat('─', ($spec->wrapLines ? $spec->maxCharsPerLine : 60));
+
+    //     $lines = [
+    //         'М Е Т А Д А Н Н И',
+    //         $sep,
+    //         'Заглавие: ' . $title,
+    //         'Автор: ' . $author,
+    //         'Допълнителна информация: ' . $course,
+    //         'Дата на генериране: ' . $date,
+    //     ];
+
+    //     if (trim($cite) !== '') {
+    //         $lines[] = '';
+    //         $lines[] = 'Цитиране (шаблон):';
+    //         foreach (TextUtil::wrapHardOrSoft($cite, $spec->maxCharsPerLine, $spec->wrapLines, true) as $w) {
+    //             $lines[] = $w;
+    //         }
+    //     }
+
+    //     return ['type' => 'meta', 'file' => '', 'lines' => $lines, 'word_count' => 0];
+    // }
+
+    public static function metadataBlocks(PageSpec $spec, array $meta): array
     {
         $date = date('d.m.Y H:i');
 
@@ -1097,31 +1198,66 @@ final class SpecialPages
         $course = (string)($meta['course'] ?? '');
         $cite   = (string)($meta['citation_template'] ?? '');
 
-        $sep = str_repeat('─', ($spec->wrapLines ? $spec->maxCharsPerLine : 60));
+        $blocks = [];
 
-        $lines = [
-            'М Е Т А Д А Н Н И',
-            $sep,
-            'Заглавие: ' . $title,
-            'Автор: ' . $author,
-            'Допълнителна информация: ' . $course,
-            'Дата на генериране: ' . $date,
-        ];
+        // заглавие (може да е header block)
+        $blocks[] = ['type' => 'header', 'level' => 1, 'text' => 'М Е Т А Д А Н Н И'];
 
-        if (trim($cite) !== '') {
-            $lines[] = '';
-            $lines[] = 'Цитиране (шаблон):';
-            foreach (TextUtil::wrapHardOrSoft($cite, $spec->maxCharsPerLine, $spec->wrapLines, true) as $w) {
-                $lines[] = $w;
-            }
-        }
+        // hr
+        $blocks[] = ['type' => 'hr'];
 
-        return ['type' => 'meta', 'file' => '', 'lines' => $lines, 'word_count' => 0];
+        // нормални paragraph-и (те ще се wrap-ват от engine-а)
+        $blocks[] = ['type' => 'paragraph', 'text' => 'Заглавие: ' . $title];
+        $blocks[] = ['type' => 'paragraph', 'text' => 'Автор: ' . $author];
+        $blocks[] = ['type' => 'paragraph', 'text' => 'Допълнителна информация: ' . $course];
+        $blocks[] = ['type' => 'paragraph', 'text' => 'Дата на генериране: ' . $date];
+
+            //     $lines = [
+    //         'М Е Т А Д А Н Н И',
+    //         $sep,
+    //         'Заглавие: ' . $title,
+    //         'Автор: ' . $author,
+    //         'Допълнителна информация: ' . $course,
+    //         'Дата на генериране: ' . $date,
+    //     ];
+
+        // if (trim($cite) !== '') {
+        //     $blocks[] = ['type' => 'blank'];
+        //     $blocks[] = ['type' => 'paragraph', 'text' => 'Цитиране (шаблон):'];
+        //     $blocks[] = ['type' => 'paragraph', 'text' => $cite];
+        // }
+
+        return $blocks;
     }
 
-    public static function statisticsPage(PageSpec $spec, DocumentStats $stats): array
+    // public static function statisticsPage(PageSpec $spec, DocumentStats $stats): array
+    // {
+    //     $sep = str_repeat('─', ($spec->wrapLines ? $spec->maxCharsPerLine : 60));
+
+    //     $spacing_map = [
+    //         1 => "сгъстена",
+    //         2 => "нормална",
+    //         3 => "разредена",
+    //     ];
+
+    //     $lines = [
+    //         'С Т А Т И С Т И К И',
+    //         $sep,
+    //         'Страници: ' . $stats->totalPages,
+    //         'Редове: ' . $stats->totalLines,
+    //         'Думи: ' . $stats->totalWords,
+    //         'Среден брой редове на страница: ' . number_format($stats->avgLinesPerPage, 2, '.', ''),
+    //         'Тип машинописна странциа: ' . $spacing_map[$spec->lineSpacing],
+    //         'Височина на редовете: ' . number_format($spec->textLineHeightMm, 2, '.', '') . 'мм',
+    //         'Интервал между редове: ' . number_format($spec->blankLineHeightMm, 2, '.', '') . 'мм',
+    //     ];
+
+    //     // ако wrap_lines е yes, все пак няма какво да се wrap-ва много тук
+    //     return ['type' => 'stats', 'file' => '', 'lines' => $lines, 'word_count' => 0];
+    // }
+
+    public static function statisticsBlocks(PageSpec $spec, DocumentStats $stats): array
     {
-        $sep = str_repeat('─', ($spec->wrapLines ? $spec->maxCharsPerLine : 60));
 
         $spacing_map = [
             1 => "сгъстена",
@@ -1129,20 +1265,30 @@ final class SpecialPages
             3 => "разредена",
         ];
 
-        $lines = [
-            'С Т А Т И С Т И К И',
-            $sep,
-            'Страници: ' . $stats->totalPages,
-            'Редове: ' . $stats->totalLines,
-            'Думи: ' . $stats->totalWords,
-            'Среден брой редове на страница: ' . number_format($stats->avgLinesPerPage, 2, '.', ''),
-            'Тип машинописна странциа: ' . $spacing_map[$spec->lineSpacing],
-            'Височина на редовете: ' . number_format($spec->textLineHeightMm, 2, '.', '') . 'мм',
-            'Интервал между редове: ' . number_format($spec->blankLineHeightMm, 2, '.', '') . 'мм',
-        ];
+    //     $lines = [
+    //         'С Т А Т И С Т И К И',
+    //         $sep,
+    //         'Страници: ' . $stats->totalPages,
+    //         'Редове: ' . $stats->totalLines,
+    //         'Думи: ' . $stats->totalWords,
+    //         'Среден брой редове на страница: ' . number_format($stats->avgLinesPerPage, 2, '.', ''),
+    //         'Тип машинописна странциа: ' . $spacing_map[$spec->lineSpacing],
+    //         'Височина на редовете: ' . number_format($spec->textLineHeightMm, 2, '.', '') . 'мм',
+    //         'Интервал между редове: ' . number_format($spec->blankLineHeightMm, 2, '.', '') . 'мм',
+    //     ];
 
-        // ако wrap_lines е yes, все пак няма какво да се wrap-ва много тук
-        return ['type' => 'stats', 'file' => '', 'lines' => $lines, 'word_count' => 0];
+        return [
+            ['type' => 'header', 'level' => 1, 'text' => 'С Т А Т И С Т И К И'],
+            ['type' => 'hr'],
+            ['type' => 'paragraph', 'text' => 'Страници: ' . $stats->totalPages],
+            ['type' => 'paragraph', 'text' => 'Редове: ' . $stats->totalLines],
+            ['type' => 'paragraph', 'text' => 'Думи: ' . $stats->totalWords],
+            ['type' => 'paragraph', 'text' => 'Среден брой редове на страница: ' . number_format($stats->avgLinesPerPage, 2, '.', '')],
+            ['type' => 'paragraph', 'text' => 'Тип машинописна страница: ' . $spacing_map[$spec->lineSpacing]],
+            ['type' => 'paragraph', 'text' => 'Височина на редовете: ' . number_format($spec->textLineHeightMm, 2, '.', '')],
+            ['type' => 'paragraph', 'text' => 'Интервал между редовете: ' . number_format($spec->blankLineHeightMm, 2, '.', '')],
+            
+        ];
     }
 }
 
