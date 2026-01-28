@@ -144,3 +144,57 @@ if (document.readyState === "loading") {
     setupButtons();
 }
 
+// Auto-generate preview when files are uploaded
+function setupFileUploadListener() {
+    const fileInput = document.getElementById("file-explorer");
+    const uploadZone = document.querySelector(".upload-zone");
+
+    if (fileInput) {
+        fileInput.addEventListener("change", () => {
+            if (fileInput.files.length > 0) {
+                // Small delay to let FileUploader.js process the files first
+                setTimeout(() => {
+                    generatePreview();
+                }, 100);
+            }
+        });
+    }
+
+    // Also listen for drag-and-drop file uploads
+    if (uploadZone) {
+        uploadZone.addEventListener("drop", () => {
+            setTimeout(() => {
+                generatePreview();
+            }, 100);
+        });
+    }
+}
+
+// Initialize file upload listener when DOM is ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupFileUploadListener);
+} else {
+    setupFileUploadListener();
+}
+
+// Auto-generate preview when loading an existing project
+function checkAndGenerateOnLoad() {
+    // Check if we have project_id in URL (coming from dashboard)
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('project_id');
+
+    if (projectId) {
+        // Small delay to ensure form is populated by FillForm.js
+        setTimeout(() => {
+            generatePreview();
+        }, 200);
+    }
+}
+
+// Initialize on load check when DOM is ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", checkAndGenerateOnLoad);
+} else {
+    checkAndGenerateOnLoad();
+}
+
