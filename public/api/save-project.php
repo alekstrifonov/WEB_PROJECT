@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../../core/DocumentEngine.php';
+
 header('Content-Type: application/json; charset=utf-8');
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -149,6 +151,15 @@ if ($data === null) {
 if (empty($data['htmls'])) {
     json_error(400, "Не сте добавили документи за обработка.");
 }
+
+$engine = new DocumentEngine();
+$engine->process($data);
+$data['stats'] = [
+    'pages' => $engine->stats->totalPages,
+    'lines' => $engine->stats->totalLines,
+    'words' => $engine->stats->totalWords,
+    'avg_lines' => number_format($engine->stats->avgLinesPerPage, 2, '.', ''),
+];
 
 $projectName = trim((string)($_POST['project_name'] ?? ''));
 if ($projectName === '') {

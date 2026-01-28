@@ -57,7 +57,7 @@ final class DocumentEngine
         $blocks = $this->applyMetaAndStats($blocks, $spec, $meta, $stats);
         $finalPages = $paginator->paginate($blocks);
 
-        $this->stats = $stats;
+        $this->$stats = $stats;
 
         // Meta / Stats pages
         // $finalPages = $this->applyMetaAndStats($contentPages, $spec, $settings, $meta);

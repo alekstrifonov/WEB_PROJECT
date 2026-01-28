@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест с картинка</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .caption {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Тестова страница с изображение</h1>
+        <p>Това е примерен параграф, който стои над картинката. Тук можеш да видиш как шрифтът се рендира преди визуалния елемент.</p>
+        
+        <img src="./image.jpg" alt="Случайна пейзажна снимка">
+        
+        <div class="caption">Фиг. 1: Случайна снимка, генерирана автоматично.</div>
+
+        <h2>Втора секция</h2>
+        <p>А това е текстът след картинката. Ако системата ти работи правилно, картинката не трябва да "чупи" лейаута, а да се оразмери спрямо контейнера (заради max-width: 100%).</p>
+    </div>
+</body>
+</html>
