@@ -29,7 +29,7 @@ class FileUploader {
     }
 
     addFiles(newFiles) {
-        const allowedExtensions = /\.(html|htm)$/i;
+        const allowedExtensions = /\.(html|htm|zip)$/i;
         const validFiles = [];
         let rejectedFiles = [];
 
@@ -40,6 +40,8 @@ class FileUploader {
                 rejectedFiles.push(file.name);
             }
         });
+
+        console.log(rejectedFiles.length);
 
         if (rejectedFiles.length > 0) {
             this.errorDisplay.textContent = `Греда, маняк! Само файлове с разширение .html!`;

@@ -43,6 +43,85 @@ function readUploadedHtml(string $tmpPath): string
     return $raw;
 }
 
+function isZipName(string $name): bool
+{
+    return (bool)preg_match('/\.zip$/i', $name);
+}
+
+function isHtmlName(string $name): bool
+{
+    return (bool)preg_match('/\.(html?|xhtml)$/i', $name);
+}
+
+/**
+ * Извлича HTML файлове от ZIP upload (само html/htm/xhtml).
+ * Връща масив елементи със структурата като останалите htmls[].
+ */
+function extractHtmlsFromZip(string $zipTmpPath, string $zipOriginalName): array
+{
+    if (!class_exists('ZipArchive')) {
+        throw new RuntimeException("ZipArchive не е наличен. Активирай php_zip разширението.");
+    }
+
+    $zip = new ZipArchive();
+    if ($zip->open($zipTmpPath) !== true) {
+        throw new RuntimeException("Неуспешно отваряне на ZIP файла: {$zipOriginalName}");
+    }
+
+    $out = [];
+
+    // Сортираме имената за стабилен ред
+    $names = [];
+    for ($i = 0; $i < $zip->numFiles; $i++) {
+        $stat = $zip->statIndex($i);
+        if (!$stat || empty($stat['name'])) continue;
+        $names[] = $stat['name'];
+    }
+    sort($names, SORT_NATURAL | SORT_FLAG_CASE);
+
+    foreach ($names as $entryName) {
+        // skip директории
+        if (substr($entryName, -1) === '/') continue;
+
+        // zip-slip защита: забраняваме абсолютни и ../
+        if (strpos($entryName, '..') !== false || strpos($entryName, ':') !== false || substr($entryName, 0, 1) === '/') {
+            continue;
+        }
+
+        if (!isHtmlName($entryName)) {
+            // картинки и други файлове засега ги игнорираме (следваща стъпка ще ги ползваме)
+            continue;
+        }
+
+        $raw = $zip->getFromName($entryName);
+        if ($raw === false) {
+            continue;
+        }
+
+        // нормализиране на encoding като при readUploadedHtml()
+        $enc = mb_detect_encoding($raw, ['UTF-8', 'Windows-1251', 'ISO-8859-5'], true);
+        if ($enc && $enc !== 'UTF-8') {
+            $raw = mb_convert_encoding($raw, 'UTF-8', $enc);
+        }
+
+        $out[] = [
+            "name"  => $zipOriginalName . "::" . $entryName, // за да знаеш откъде идва
+            "type"  => "text/html",
+            "html"  => $raw,
+            "error" => 0,
+            "size"  => strlen($raw),
+        ];
+    }
+
+    $zip->close();
+
+    if (empty($out)) {
+        throw new RuntimeException("ZIP файлът не съдържа HTML документи: {$zipOriginalName}");
+    }
+
+    return $out;
+}
+
 function aggregateInput(): ?array
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['generate_preview'])) {
@@ -79,16 +158,47 @@ function aggregateInput(): ?array
 
     if (!empty($_FILES['html_files']['name'][0])) {
         foreach ($_FILES['html_files']['name'] as $i => $name) {
-            $tmp = $_FILES['html_files']['tmp_name'][$i] ?? '';
+            $name = (string)$name;
+            $tmp  = $_FILES['html_files']['tmp_name'][$i] ?? '';
+            $err  = (int)($_FILES['html_files']['error'][$i] ?? 0);
+
+            if ($err !== UPLOAD_ERR_OK) {
+                // пропускаме счупени upload-и
+                continue;
+            }
+
+            if ($tmp && isZipName($name)) {
+                // ✅ ZIP: вади HTML-ите вътре
+                $fromZip = extractHtmlsFromZip($tmp, $name);
+                foreach ($fromZip as $z) {
+                    $htmls[] = $z;
+                }
+                continue;
+            }
+
+            // ✅ Обикновен HTML upload както досега
             $htmls[] = [
                 "name"  => $_FILES['html_files']['name'][$i] ?? $name,
                 "type"  => $_FILES['html_files']['type'][$i] ?? '',
                 "html"  => $tmp ? readUploadedHtml($tmp) : '',
-                "error" => (int)($_FILES['html_files']['error'][$i] ?? 0),
+                "error" => 0,
                 "size"  => (int)($_FILES['html_files']['size'][$i] ?? 0),
             ];
         }
     }
+
+    // if (!empty($_FILES['html_files']['name'][0])) {
+    //     foreach ($_FILES['html_files']['name'] as $i => $name) {
+    //         $tmp = $_FILES['html_files']['tmp_name'][$i] ?? '';
+    //         $htmls[] = [
+    //             "name"  => $_FILES['html_files']['name'][$i] ?? $name,
+    //             "type"  => $_FILES['html_files']['type'][$i] ?? '',
+    //             "html"  => $tmp ? readUploadedHtml($tmp) : '',
+    //             "error" => (int)($_FILES['html_files']['error'][$i] ?? 0),
+    //             "size"  => (int)($_FILES['html_files']['size'][$i] ?? 0),
+    //         ];
+    //     }
+    // }
 
     return [
         "htmls" => $htmls,
