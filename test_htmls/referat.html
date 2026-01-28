@@ -1,0 +1,1265 @@
+<!doctype html>
+
+<html lang="bg">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>CoffeeScript</title>
+    <link href="css/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <h1 class="site-title">CoffeeScript</h1>
+        <h2 class="sub-title">Сергей Данкогло, 5MI8000027</h2>
+      </div>
+    </header>
+
+    <main class="page">
+      <article class="report">
+
+        <!-- СЪДЪРЖАНИЕ -->
+
+        <section class="section" id="toc">
+          <h2 class="section-title">Съдържание</h2>
+          <ol class="toc-list">
+            <li><a href="#introduction">Кратко въведение в CoffeeScript</a></li>
+            <li><a href="#translator">Що е то Транслатор?</a></li>
+            <li><a href="#history">Историята и хронологията на CoffeeScript</a></li>
+            <li><a href="#goals">Целите на CoffeeScript</a></li>
+            <li><a href="#syntax">Основни синтактични конструкции</a></li>
+            <li><a href="#differences">Разлики и предимства спрямо JavaScript</a></li>
+            <li><a href="#practical-examples">Малък уеб-сървър на CoffeeScript</a></li>
+            <li><a href="#applications">Примери на съществуващи приложения</a></li>
+            <li><a href="#the-sad-truth">Тъжната истина за CoffeeScript</a></li>
+            <li><a href="#citations">Списък от източници</a></li>
+          </ol>
+        </section>
+
+        <!-- 1. ВЪВЕДЕНИЕ -->
+        
+        <section class="section" id="introduction">
+          <h2 class="section-title">1. Кратко въведение в CoffeeScript</h2>
+          <p>
+            CoffeeScript е лек език за програмиране, който се транспилира
+            (компилира) в JavaScript [1]. Той е създаден с идеята да подобри
+            четимостта и краткостта на кода, като премахва много от тромавите
+            синтактични елементи на JavaScript, като същевременно запазва
+            пълната му функционалност и съвместимост. Основната философия е:
+            <q>Това е просто JavaScript</q> [2].
+          </p>
+          <p>
+            CoffeeScript въвежда синтаксис, вдъхновен от езици като Ruby и
+            Python, използвайки отстъпи (whitespace significance) за
+            дефиниране на блокове вместо къдрави скоби, и заменяйки ключови думи
+            като
+            <code>function</code> с по-краткия оператор <code>-&gt;</code>.
+          </p>
+          <p>
+            Всяка програма, написана на CoffeeScript, се превръща в еквивалентен
+            JavaScript код, който може да бъде изпълнен от всеки съвременен уеб
+            браузър или Node.js среда. Това го прави мощен инструмент за бърза
+            разработка (Rapid Prototyping) и писане на по-чист код [1].
+          </p>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 2. ТРАНСЛАТОР -->
+        
+        <section class="section" id="translator">
+          <h2 class="section-title">2. Що е то Транслатор?</h2>
+          <p>
+            В компютърните науки, транслаторът е инструмент, който чете изходен
+            код, написан на един език за програмиране, и генерира еквивалентен
+            код на друг език. Този процес често се нарича преобразуване
+            „източник-към-източник“ (source-to-source converter).
+          </p>
+          <figure class="figure">
+            <img alt="Схема на процеса на транслиране" src="img/transpiler.webp" />
+            <figcaption>
+              Фигура 1.1: Процес на транслиране. (Източник: o7planning.org) [3]
+            </figcaption>
+          </figure>
+          <h3>2.1. Видове транслатори</h3>
+          <p>
+            Съществува важно разграничение между основните видове транслатори,
+            базирано на нивото на езиците, които обработват:
+          </p>
+          <ul>
+            <li>
+              <strong>Компилатор (Compiler):</strong> Използва се за
+              преобразуване на изходен код, написан на език от високо ниво
+              (четим от хора), в език от ниско ниво (машинен код), за да се
+              създадат изпълними програми.
+            </li>
+            <li>
+              <strong>Транспилатор (Transpiler):</strong> Терминът произлиза от
+              появата на езици като CoffeeScript, TypeScript и Dart.
+              Транспилаторите преобразуват код от един език от високо ниво (със
+              строг синтаксис и ясни типове данни) в друг език от високо ниво
+              (най-често JavaScript).
+            </li>
+          </ul>
+          <h3>2.2. Защо се използват транслатори?</h3>
+          <p>
+            Транслаторите и по-специално транспилаторите допринасят значително
+            за модерната уеб разработка по няколко начина:
+          </p>
+          <ul>
+            <li>
+              <strong>По-добра поддръжка:</strong> Езиците, които са „насочени
+              към JavaScript“ (JavaScript-targeted), често предлагат по-добри
+              инструменти за разработка и поддръжка на големи проекти.
+            </li>
+            <li>
+              <strong>Оптимизация на производителността:</strong> В някои
+              случаи, части от кодова база могат да бъдат конвертирани към
+              по-ефективен език. Например, код от Python може да се конвертира
+              към Fortran за по-добра оптимизация.
+            </li>
+            <li>
+              <strong>Обратна съвместимост (Polyfills):</strong> Транспилатори
+              като Babel позволяват на програмистите да пишат код с най-новия
+              синтаксис (ES6+), който след това се конвертира в по-стара версия
+              (ES5), за да работи на стари браузъри.
+            </li>
+          </ul>
+          <h3>2.3. Примери за известни транслатори</h3>
+          <figure class="figure">
+            <table id="transpiler-table">
+              <caption>
+                Таблица 2.1: Популярни транслатори в уеб разработката
+              </caption>
+              <thead>
+                <tr>
+                  <th>Име</th>
+                  <th>Описание</th>
+                  <th>Употреба</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>CoffeeScript</strong></td>
+                  <td>Преобразува CoffeeScript към JavaScript.</td>
+                  <td>
+                    Опростяване на синтаксиса и ускоряване на разработката.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Babel</strong></td>
+                  <td>Конвертира модерен JavaScript (ES6+) към ES5.</td>
+                  <td>Осигуряване на съвместимост със стари браузъри.</td>
+                </tr>
+                <tr>
+                  <td><strong>TypeScript</strong></td>
+                  <td>Добавя строга типизация към JavaScript.</td>
+                  <td>
+                    Мащабни проекти, изискващи надеждност и типова безопасност.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Dart</strong></td>
+                  <td>Език, разработен от Google, който се компилира до JS.</td>
+                  <td>
+                    Разработка на клиентски приложения (напр. чрез Flutter).
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <figcaption>
+              Фигура 2.1: Сравнение на популярни транслатори.
+            </figcaption>
+          </figure>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 3. ИСТОРИЯ -->
+        
+        <section class="section" id="history">
+          <h2 class="section-title">
+            3. История и хронология на CoffeeScript
+          </h2>
+          <p>
+            CoffeeScript е създаден от Jeremy Ashkenas (Джеръми Ашкенас), който
+            е известен и с разработването на популярната MVC библиотека
+            Backbone.js [4].
+          </p>
+          <p>
+            Първата публична версия (0.1.0) е представена на 24 декември 2009 г.
+            [5]. Ашкенас създава езика, за да направи писането на JavaScript
+            по-приятно и да избегне някои от неговите известни „странности“.
+            Езикът бързо набира популярност, подпомогната от тогавашната липса на
+            стандартизиран, по-чист синтаксис в JavaScript (преди ES6).
+          </p>
+          <ul>
+            <li>2010 г.: Излиза версия 1.0.0, която стабилизира синтаксиса.</li>
+            <li>
+              2011 г.: Ruby on Rails, един от най-популярните уеб фреймворци, избира
+              CoffeeScript като език по подразбиране в своята екосистема [6]. Това
+              дава огромен тласък на приемането на езика в индустрията.
+            </li>
+            <li>
+              2012–2015 г.: Езикът достига своя пик на популярност, използван в
+              множество големи проекти (като GitHub Atom).
+            </li>
+            <li>
+              След 2015 г.: Популярността намалява с излизането на ECMAScript
+              2015 (ES6), който въвежда много от предимствата, които CoffeeScript е
+              популяризирал (класове, стрелкови функции, <code>let/const</code>)
+              [7].
+            </li>
+            <li>
+              2017 г.: Излиза CoffeeScript 2.0, който вече се компилира към
+              модерен ES6+ синтаксис, запазвайки краткия CoffeeScript синтаксис,
+              но използвайки новите JavaScript стандарти [8].
+            </li>
+          </ul>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 4. ЦЕЛИ  -->
+        
+        <section class="section" id="goals">
+          <h2 class="section-title">4. Целите на CoffeeScript</h2>
+          <p>
+            CoffeeScript е създаден с няколко основни цели, насочени към
+            подобряване на разработването на уеб приложения [1]:
+          </p>
+          <h3>4.1. Краткост и елегантност</h3>
+          <p>
+            Основната цел е да се намали количеството код, което трябва да бъде
+            написано за изпълнение на дадена задача. Чрез премахване на скоби,
+            точки и запетаи и използване на интуитивни синтактични елементи,
+            CoffeeScript позволява на разработчиците да се фокусират върху
+            логиката, а не върху синтаксиса [1].
+          </p>
+          <h3>4.2. Избягване на проблемите на JavaScript</h3>
+          <p>
+            Езикът автоматично имплементира добри практики, които предотвратяват
+            често срещани грешки в JavaScript, като например:
+          </p>
+          <ul>
+            <li>
+              Автоматично капсулиране на целия код във функция с незабавно
+              изпълнение (IIFE), за да се избегне замърсяване на глобалното
+              пространство [1].
+            </li>
+            <li>
+              Използване на <code>=&gt;</code> (fat arrow) за автоматично
+              обвързване на ключовата дума <code>this</code> към обхвата на
+              функцията, решавайки често срещан проблем с обекти и асинхронни
+              операции [9].
+            </li>
+            <li>
+              Улеснено боравене с <code>null</code> и
+              <code>undefined</code> чрез оператора за съществуване
+              (<code>?</code>).
+            </li>
+          </ul>
+          <h3>4.3. Съвместимост с ООП парадигмата</h3>
+          <p>
+            Въвежда синтаксис за класове и наследяване, който е по-интуитивен и
+            познат на програмисти, идващи от езици като Java, C# или Ruby.
+            Въпреки че JavaScript е базиран на прототипи, CoffeeScript
+            предоставя лесна за разбиране абстракция върху този механизъм [1].
+          </p>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 5. СИНТАКСИС -->
+        
+        <section class="section" id="syntax">
+          <h2 class="section-title">5. Основни синтактични конструкции</h2>
+          <p>
+            Синтаксисът на CoffeeScript е изключително минималистичен, като
+            използва отстъпи (indentation) за структура, заменяйки
+            къдравите скоби на JavaScript.
+          </p>
+          <!-- 5.1 Функции -->
+          <h3>5.1. Функции</h3>
+          <p>
+            Функциите се дефинират с оператора стрелка (<code>-&gt;</code>).
+            Тялото на функцията използва отстъпи, а резултатът от последния
+            ред се връща като резултат от изпълнението на функцията (implicit
+            return) [1].
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>square = (x) -&gt; x * x
+cube   = (x) -&gt; square(x) * x</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var cube, square;
+
+square = function(x) {
+  return x * x;
+};
+
+cube = function(x) {
+  return square(x) * x;
+};</code></pre>
+            </div>
+          </div>
+          <p>
+            Функциите също така могат да имат и аргументи по подразбиране, в
+            случай когато последните не са зададени.
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>fill = (container, liquid = "coffee") -&gt;
+  "Filling the #{container} with #{liquid}..."</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var fill;
+
+fill = function(container, liquid = "coffee") {
+  return `Filling the ${container} with ${liquid}...`;
+};</code></pre>
+            </div>
+          </div>
+          <!-- 5.2 Низове -->
+          <h3>5.2. Низове</h3>
+          <p>
+            CoffeeScript поддържа интерполация на променливи в низове с двойни
+            кавички чрез синтаксиса <code>#{}</code>. Също така се допуска
+            използването на многоредови низове.
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>poem = """
+  The rain in Spain
+  stays mainly in the plain.
+"""
+
+author = "Trevor Burnham"
+quote = "Code is #{poem} -- #{author}."</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var author, poem, quote;
+
+poem = "The rain in Spain\nstays mainly in the plain.\n";
+
+author = "Trevor Burnham";
+
+quote = "Code is " + poem + " -- " + author + ".";</code></pre>
+            </div>
+          </div>
+          <!-- 5.3 Обекти и масиви -->
+          <h3>5.3. Обекти и масиви</h3>
+          <p>
+            Къдравите скоби (за обекти) и запетаите са опционални при използване
+            на отстъпи и нови редове. Това прави дефинирането на структури от
+            данни много по-кратко [1].
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>song =
+  title: "Rhapsody"
+  artist: "Queen"
+  tags: [
+    "rock"
+    "opera"
+    "classic"
+  ]</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var song;
+
+song = {
+  title: "Rhapsody",
+  artist: "Queen",
+  tags: ["rock", "opera", "classic"]
+};</code></pre>
+            </div>
+          </div>
+          <!-- 5.4 Коментари -->
+          <h3>5.4. Коментари</h3>
+          <p>
+            В CoffeeScript коментарите се отбелязват със знака <code>#</code> до
+            края на реда или с <code>###</code>, продължаващи до следващата
+            поява на <code>###</code>. Коментарите се игнорират от компилатора,
+            въпреки че той полага усилия да ги включи отново в генерирания
+            JavaScript след компилацията.
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>###
+Fortune Cookie Reader v1.0
+Released under the MIT License
+###
+
+sayFortune = (fortune) -&gt;
+  console.log fortune # in bed!</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>/*
+Fortune Cookie Reader v1.0
+Released under the MIT License
+*/
+var sayFortune;
+
+sayFortune = function(fortune) {
+  return console.log(fortune); // in bed!
+};</code></pre>
+            </div>
+          </div>
+          <p>
+            Вградените коментари с <code>###</code> позволяват използването на
+            типови анотации.
+          </p>
+          <!-- 5.5 Scope -->
+          <h3>5.5. Област на видимост (Scope)</h3>
+          <p>
+            CoffeeScript автоматично капсулира целия код във функция с незабавно
+            изпълнение (IIFE) и автоматично дефинира променливите с
+            <code>var</code> (или <code>let</code>/<code>const</code> в CS 2.0),
+            за да предотврати замърсяване на глобалното пространство [1].
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>outer = 1
+
+changeNumbers = -&gt;
+  inner = -1
+  outer = 10
+
+inner = changeNumbers()</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var changeNumbers, inner, outer;
+
+outer = 1;
+
+changeNumbers = function() {
+  var inner;
+  inner = -1;
+  return outer = 10;
+};
+
+inner = changeNumbers();</code></pre>
+            </div>
+          </div>
+          <p>
+            Обърнете внимание как всички декларации на променливи са изтеглени
+            нагоре до върха на най-близката област на видимост (scope), в която
+            се използват за пръв път. Променливата <code>outer</code> не се
+            декларира повторно във вътрешната функция, тъй като тя вече
+            се обхваща (сe използва); <code>inner</code> във функцията, от друга страна, не би
+            трябвало да може да променя стойността на външната променлива със
+            същото име (още не е използвана) и следователно има собствена декларация. Тъй като няма
+            пряк достъп до ключовата дума <code>var</code>, е невъзможно
+            умишлено да засенчим (shadow) външна променлива. 
+          </p>
+          <!-- 5.6 Условни оператори -->
+          <h3>5.6. Условни оператори</h3>
+          <p>
+            Условните конструкции използват ключовите думи <code>if</code>,
+            <code>else</code>, <code>unless</code>. Те могат да бъдат използвани
+            в ин-фикс и пост-фикс форма (след израза) [1].
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>speed = 0
+speed = 10 unless speed?
+
+if speed &lt; 10
+  status = "slow"
+else if speed &lt; 50
+  status = "normal"
+else
+  status = "fast"</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var speed, status;
+
+speed = 0;
+if (speed == null) {
+  speed = 10;
+}
+
+if (speed &lt; 10) {
+  status = "slow";
+} else if (speed &lt; 50) {
+  status = "normal";
+} else {
+  status = "fast";
+}</code></pre>
+            </div>
+          </div>
+          <!-- 5.7 Цикли и List Comprehensions -->
+          <h3>5.7. Цикли и обхвати (list comprehensions)</h3>
+          <p>
+            Циклите се дефинират чрез <code>for</code>. Списъчните обхвати
+            (List Comprehensions) позволяват трансформиране на масиви с един ред
+            код [1].
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code># Eat lunch.
+eat = (food) -&gt; "#{food} eaten."
+eat food for food in ['toast', 'cheese', 'wine']
+
+# Fine five course dining.
+courses = ['greens', 'caviar', 'truffles', 'roast', 'cake']
+menu = (i, dish) -&gt; "Menu Item #{i}: #{dish}"
+menu i + 1, dish for dish, i in courses
+
+# Health conscious meal.
+foods = ['broccoli', 'spinach', 'chocolate']
+eat food for food in foods when food isnt 'chocolate'</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>// Eat lunch.
+var courses, dish, eat, food, foods, i, j, k, l, len, len1, len2, menu, ref;
+
+eat = function(food) {
+  return `${food} eaten.`;
+};
+
+ref = ['toast', 'cheese', 'wine'];
+for (j = 0, len = ref.length; j &lt; len; j++) {
+  food = ref[j];
+  eat(food);
+}
+
+// Fine five course dining.
+courses = ['greens', 'caviar', 'truffles', 'roast', 'cake'];
+
+menu = function(i, dish) {
+  return `Menu Item ${i}: ${dish}`;
+};
+
+for (i = k = 0, len1 = courses.length; k &lt; len1; i = ++k) {
+  dish = courses[i];
+  menu(i + 1, dish);
+}
+
+// Health conscious meal.
+foods = ['broccoli', 'spinach', 'chocolate'];
+
+for (l = 0, len2 = foods.length; l &lt; len2; l++) {
+  food = foods[l];
+  if (food !== 'chocolate') {
+    eat(food);
+  }
+}</code></pre>
+            </div>
+          </div>
+          <!-- 5.8 Изрази -->
+          <h3>5.8. Изрази (Expressions)</h3>
+          <p>
+            В CoffeeScript почти всичко е <strong>израз (expression)</strong>,
+            за разлика от JavaScript, където много управляващи инструкции (като
+            <code>if</code>, <code>switch</code> и <code>for</code>) са само
+            инструкции (statements) и не връщат стойност. Тази концепция прави
+            кода по-функционален и позволява на програмиста да присвоява
+            резултата от цял контролен блок на променлива.
+          </p>
+          <p>
+            Например, <code>if/else</code> блокът автоматично връща стойност,
+            елиминирайки нуждата от тернарен оператор (<code>? :</code>) за
+            просто присвояване. Това важи и за циклите, където, както беше
+            показано в предишната секция, те могат да връщат масиви (List
+            Comprehensions).
+          </p>
+          <p>
+            Въпреки че не добавяме оператори <code>return</code> към
+            CoffeeScript функциите, те все пак връщат своята финална стойност.
+            Компилаторът на CoffeeScript се стреми да гарантира, че всички
+            инструкции в езика могат да бъдат използвани като изрази
+            (expressions).
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>grade = (student) -&gt;
+  if student.excellentWork
+    "A+"
+  else if student.okayStuff
+    if student.triedHard then "B" else "B-"
+  else
+    "C"
+
+eldest = if 24 &gt; 21 then "Liz" else "Ike"</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var eldest, grade;
+
+grade = function(student) {
+  if (student.excellentWork) {
+    return "A+";
+  } else if (student.okayStuff) {
+    if (student.triedHard) {
+      return "B";
+    } else {
+      return "B-";
+    }
+  } else {
+    return "C";
+  }
+};
+
+eldest = 24 &gt; 21 ? "Liz" : "Ike";</code></pre>
+            </div>
+          </div>
+          <!-- 5.9 Оператори -->
+          <h3>5.9. Оператори</h3>
+          <p>
+            CoffeeScript замества някои символни оператори с по-четливи думи
+            (напр. <code>is</code>, <code>not</code>, <code>and</code>,
+            <code>or</code>).
+          </p>
+          <figure class="figure">
+            <table id="operator-table">
+              <caption>
+                Таблица 5.9: Сравнение на основните оператори в CoffeeScript и
+                JavaScript ES5 [1]
+              </caption>
+              <thead>
+                <tr>
+                  <th>CoffeeScript</th>
+                  <th>JavaScript Еквивалент</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>is</code></td>
+                  <td><code>===</code></td>
+                </tr>
+                <tr>
+                  <td><code>isnt</code></td>
+                  <td><code>!==</code></td>
+                </tr>
+                <tr>
+                  <td><code>not</code></td>
+                  <td><code>!</code></td>
+                </tr>
+                <tr>
+                  <td><code>and</code></td>
+                  <td><code>&amp;&amp;</code></td>
+                </tr>
+                <tr>
+                  <td><code>or</code></td>
+                  <td><code>||</code></td>
+                </tr>
+                <tr>
+                  <td><code>true</code>, <code>yes</code>, <code>on</code></td>
+                  <td><code>true</code></td>
+                </tr>
+                <tr>
+                  <td><code>false</code>, <code>no</code>, <code>off</code></td>
+                  <td><code>false</code></td>
+                </tr>
+                <tr>
+                  <td><code>@</code>, <code>this</code></td>
+                  <td><code>this</code></td>
+                </tr>
+                <tr>
+                  <td><code>a in b</code></td>
+                  <td>
+                    <code>[].indexOf.call(b, a) &gt;= 0</code> (Проверка за принадлежност)
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>a of b</code></td>
+                  <td><code>a in b</code> (Проверка за наличие на ключ в обект)</td>
+                </tr>
+                <tr>
+                  <td><code>for a from b</code></td>
+                  <td><code>for (a of b)</code> (Итериране по ключове)</td>
+                </tr>
+                <tr>
+                  <td><code>a ** b</code></td>
+                  <td><code>Math.pow(a, b)</code> (Степенуване)</td>
+                </tr>
+                <tr>
+                  <td><code>a // b</code></td>
+                  <td><code>Math.floor(a / b)</code> (Целочислено деление)</td>
+                </tr>
+                <tr>
+                  <td><code>a %% b</code></td>
+                  <td>
+                    <code>(a % b + b) % b</code> (Оператор за деление с остатък с коректно
+                    поведение при отрицателни числа)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <figcaption>
+              Фигура 5.9: Оператори, които CoffeeScript трансформира за по-добра
+              четимост или функционалност. [1]
+            </figcaption>
+          </figure>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code># Четливи оператори
+if a is b and not c
+  alert 'ok'
+
+# Оператор за съществуване
+velocity =
+  speed: 10 if car?
+
+name = user?.name</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var name, velocity;
+
+if (a === b &amp;&amp; !c) {
+  alert('ok');
+}
+
+if (typeof car !== "undefined" &amp;&amp; car !== null) {
+  velocity = {
+    speed: 10
+  };
+}
+
+name = typeof user !== "undefined" &amp;&amp; user !== null ? user.name : void 0;</code></pre>
+            </div>
+          </div>
+          <p>
+            Операторът за съществуване (Existential Operator) <code>?</code> се
+            използва за безопасен достъп до свойства [1].
+          </p>
+          <!-- 5.10 Класове -->
+          <h3>5.10. Класове</h3>
+          <p>
+            CoffeeScript 1 предоставя ключовите думи <code>class</code> и
+            <code>extends</code> като синтактичен елемент (syntactic sugar) за
+            работа с прототипни функции. С навлизането на ES2015 JavaScript
+            възприе тези ключови думи; затова CoffeeScript 2 компилира своите
+            ключови думи <code>class</code> и <code>extends</code> към класове в
+            ES2015.
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>class Animal
+  constructor: (@name) -&gt;
+
+  move: (meters) -&gt;
+    alert "#{@name} moved #{meters}m."
+
+class Snake extends Animal
+  move: -&gt;
+    alert "Slithering..."
+    super 5
+
+class Horse extends Animal
+  move: -&gt;
+    alert "Galloping..."
+    super 45
+
+sam = new Snake "Sammy the Python"
+tom = new Horse "Tommy the Palomino"
+
+sam.move()
+tom.move()</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript (част)</div>
+              <pre><code>var Animal, Horse, Snake, sam, tom;
+
+Animal = class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+
+  move(meters) {
+    return alert(this.name + ` moved ${meters}m.`);
+  }
+};
+
+Snake = class Snake extends Animal {
+  move() {
+    alert("Slithering...");
+    return super.move(5);
+  }
+};
+
+Horse = class Horse extends Animal {
+  move() {
+    alert("Galloping...");
+    return super.move(45);
+  }
+};
+
+sam = new Snake("Sammy the Python");
+tom = new Horse("Tommy the Palomino");
+
+sam.move();
+tom.move();</code></pre>
+            </div>
+          </div>
+          <!-- 5.11 Типови анотации -->
+          <h3>5.11. Типови анотации</h3>
+          <p>
+            Статичното проверяване на типове може да бъде постигнато в
+            CoffeeScript използвайки
+            <a
+              href="https://flow.org/en/docs/types/comments/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Comment Types syntax</a
+            >
+            на
+            <a
+              href="https://flow.org/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Flow</a
+            >.
+          </p>
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code># @flow
+
+###::
+type Obj = {
+  num: number,
+};
+###
+
+fn = (str ###: string ###, obj ###: Obj ###) ###: string ### -&gt;
+  str + obj.num</code></pre>
+            </div>
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript (част)</div>
+              <pre><code>// @flow
+/*::
+type Obj = {
+  num: number,
+};
+*/
+var fn;
+
+fn = function(str/*: string */, obj/*: Obj */)/*: string */ {
+  return str + obj.num;
+};</code></pre>
+            </div>
+          </div>
+          <p>
+            CoffeeScript не извършва никаква проверка на типове сам по себе си;
+            JavaScript резултатът, който виждате по-горе, трябва да бъде подаден
+            към Flow, за да може то да валидира вашия код.
+          </p>
+          <pre
+            class="inline-pre"
+          ><code>coffee --bare --no-header --compile app.coffee &amp;&amp; npm run flow</code></pre>
+          <p>
+            Опциите <code>--bare</code> и <code>--no-header</code> са важни,
+            защото Flow изисква първият ред на файла да бъде коментарът
+            <code>// @flow</code>.
+          </p>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 6. РАЗЛИКИ С JS -->
+        
+        <section class="section" id="differences">
+          <h2 class="section-title">
+            6. Разлики и предимства спрямо JavaScript
+          </h2>
+          <p>
+            CoffeeScript служи като интерпретативен слой, който добавя
+            синтактични предимства, липсващи в ранните версии на JavaScript.
+          </p>
+          <h3>6.1. Синтактични предимства (Syntactic Sugar)</h3>
+          <p>
+            CoffeeScript превъзхожда JavaScript по краткост и чистота на
+            синтаксиса.
+          </p>
+          <figure class="figure">
+            <table id="table-6-1">
+              <caption>
+                Таблица 6.1: Директно сравнение на синтаксиса
+              </caption>
+              <thead>
+                <tr>
+                  <th>Характеристика</th>
+                  <th>CoffeeScript</th>
+                  <th>JavaScript (ES5)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Дефиниране на функция</td>
+                  <td><code>(a, b) -&gt; a + b</code></td>
+                  <td><code>function(a, b) { return a + b; }</code></td>
+                </tr>
+                <tr>
+                  <td>Оператор за съществуване</td>
+                  <td><code>user?.name</code></td>
+                  <td><code>(user != null ? user.name : undefined)</code></td>
+                </tr>
+                <tr>
+                  <td><code>this</code> обвързване</td>
+                  <td><code>log = =&gt; console.log @message</code></td>
+                  <td>
+                    <code
+                      >var _this = this; this.log = function() { return
+                      _this.message; };</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Сравнение на равенство</td>
+                  <td><code>if a is b</code></td>
+                  <td><code>if (a === b)</code></td>
+                </tr>
+              </tbody>
+            </table>
+            <figcaption>
+              Фигура 6.1: Основни разлики между CoffeeScript и JavaScript ES5.
+              [1], [9]
+            </figcaption>
+          </figure>
+          <h3>6.2. Предимства при разработване</h3>
+          <ul>
+            <li>
+              По-малко грешки при обхвата: Автоматичното избягване на глобални
+              променливи и ясният синтаксис за обвързване на
+              <code>this</code> намаляват често срещаните грешки.
+            </li>
+            <li>
+              По-висока производителност: Позволява на разработчиците да пишат код по-бързо.
+            </li>
+            <li>
+              Чист изходен JavaScript: Компилаторът гарантира, че генерираният
+              JavaScript е чист, добре форматиран и се придържа към добрите
+              практики [1].
+            </li>
+          </ul>
+        </section>
+        <hr class="divider" />
+
+        <!--7. ПРАКТИЧЕСКИ ПРИМЕРИ -->
+        
+        <section class="section" id="practical-examples">
+          <h2 class="section-title">7. Малък уеб-сървър на CoffeeScript</h2>
+
+          <p>
+            Следва пример за <strong>минимален JSON API сървър</strong> на
+            Node.js, който обслужва един endpoint:
+            <code>GET /api/echo?msg=...</code>. Ако параметърът
+            <code>msg</code> липсва, връща стойност по подразбиране.
+          </p>
+
+          <p>
+            Важно е да се обърне внимание как CoffeeScript прави същата логика
+            по-кратка чрез:
+            <strong>отстъпи</strong>,
+            <strong>implicit return</strong>, оператора за съществуване
+            <code>?</code>, и по-четливи оператори като <code>is</code> /
+            <code>yes</code>. [1] В JavaScript (ES5) същото изисква повече „шум“
+            — фигурни скоби, <code>var</code>, повече проверки за
+            <code>null/undefined</code>.
+          </p>
+
+          <div class="code-pair">
+            <div class="code-block coffeescript">
+              <div class="code-caption">CoffeeScript</div>
+              <pre><code>http = require 'http'
+url  = require 'url'
+
+send = (res, code, obj) -&gt;
+  res.writeHead code, {'Content-Type': 'application/json; charset=utf-8'}
+  res.end JSON.stringify obj
+
+server = http.createServer (req, res) -&gt;
+  {pathname, query} = url.parse req.url, true
+
+  if req.method is 'GET' and pathname is '/api/echo'
+    msg = query.msg ? 'Hello'
+    obj =
+      ok: yes
+      echo: msg
+      at: Data.now()
+
+    send res, 200, obj
+  else
+    obj =
+      ok: no
+      error: 'Not found'
+
+    send res, 404, obj
+
+server.listen 3000, () -&gt; console.log 'http://localhost:3000'</code></pre>
+            </div>
+
+            <div class="code-block javascript">
+              <div class="code-caption">Еквивалентен JavaScript</div>
+              <pre><code>var http = require('http');
+var url = require('url');
+
+function send(res, code, obj) {
+  res.writeHead(code, {'Content-Type': 'application/json; charset=utf-8'});
+  res.end(JSON.stringify(obj));
+}
+
+var server = http.createServer(function(req, res) {
+  var parsed = url.parse(req.url, true);
+  var pathname = parsed.pathname;
+  var query = parsed.query;
+
+  if (req.method === 'GET' &amp;&amp; pathname === '/api/echo') {
+    var msg = (query &amp;&amp; query.msg != null) ? query.msg : 'Hello';
+    var obj = {
+      ok: true,
+      echo: msg,
+      at: Data.now()
+    }
+
+    send(res, 200, obj);
+  } else {
+    var obj = {
+      ok: false,
+      error: 'Not found'
+    }
+
+    send(res, 404, obj);
+  }
+});
+
+server.listen(3000, function() {
+  console.log('http://localhost:3000');
+});</code></pre>
+            </div>
+          </div>
+
+          <p>
+            Тестване (пример): отворете
+            <code>http://localhost:3000/api/echo?msg=Zdravei</code> и ще
+            получите JSON отговор. При липсващ <code>msg</code> ще получите
+            <code>"Hello"</code> по подразбиране. И в двата варианта логиката е
+            една и съща, разликата е в „плътността“ на синтаксиса.
+          </p>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 8. ПРИЛОЖЕНИЯ -->
+        
+        <section class="section" id="applications">
+          <h2 class="section-title">
+            8. Примери на съществуващи приложения или сайтове, които използват
+            CoffeeScript
+          </h2>
+          <p>
+            CoffeeScript е бил жизненоважен инструмент в разработката на няколко
+            значими софтуерни продукта и платформи:
+          </p>
+          <ul>
+            <li>
+              GitHub Atom Editor: Ранните версии на популярния текстов редактор
+              на GitHub са базирани на CoffeeScript [10].
+            </li>
+            <li>
+              Ruby on Rails: В продължение на години CoffeeScript беше
+              стандартната опция за скриптове на клиентската страна, интегриран
+              дълбоко в Rails asset pipeline [6].
+            </li>
+            <li>
+              Discourse: Платформата за дискусии и форуми с отворен код,
+              създадена от Джеф Атууд (Jeff Atwood), активно използва
+              CoffeeScript за клиентския си код [11].
+            </li>
+            <li>
+              DocuSign: Компанията за електронни подписи е използвала
+              CoffeeScript в голяма част от своята фронтенд база преди
+              миграцията към TypeScript [12].
+            </li>
+          </ul>
+          <p>
+            Тези примери подчертават ролята на CoffeeScript като зрял и надежден
+            език, подходящ за големи, мащабируеми проекти, където чистотата на
+            кода е от първостепенно значение.
+          </p>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 9. ТЪЖНАТА ИСТИНА  -->
+        
+        <section class="section" id="the-sad-truth">
+          <h2 class="section-title">9. Тъжната истина за езика CoffeeScript</h2>
+          <p>
+            Въпреки своята елегантност и значителна роля в историята на уеб
+            разработката,
+            <strong>CoffeeScript загуби доминиращата си позиция</strong> на
+            пазара след 2015 г. Причините за този спад са комплексни и са пряко
+            свързани с еволюцията на самия JavaScript.
+          </p>
+          <h3>9.1. Причини за загубата на популярност</h3>
+          <ul>
+            <li>
+              <strong>Появата на ES6 (ECMAScript 2015):</strong> Най-големият
+              конкурент на CoffeeScript се оказа самият JavaScript. ES6 въведе
+              <strong>нативни</strong> функции като стрелкови функции (Arrow
+              Functions), класове (Classes), <code>let</code> и
+              <code>const</code>, които бяха основните „синтактични елементи“,
+              предлагани от CoffeeScript. Щом те станаха част от стандарта,
+              нуждата от външен транспилатор за постигане на елегантен синтаксис
+              намаля драстично.
+            </li>
+            <li>
+              <strong>Възходът на TypeScript:</strong> Другият основен
+              конкурент, <strong>TypeScript (TS)</strong>, се фокусира върху
+              решаването на по-голям проблем. Докато
+              CoffeeScript предлагаше синтактично опростяване, TypeScript
+              предложи <strong>типова безопасност (Type Safety)</strong> и
+              <strong>мащабируемост</strong>. За големи корпоративни проекти,
+              възможността за откриване на грешки още по време на писане
+              (Compile-Time) и подобряването на инструментите за автодопълване и
+              рефакторинг (IDE Tooling) се оказаха по-ценни от краткия
+              синтаксис.
+            </li>
+            <li>
+              <strong>Трудности при дебъгване (Debugging):</strong> Когато се
+              налага дебъгване, разработчиците трябва да преминат през
+              генерирания JavaScript код, който, въпреки че е чист, не е
+              идентичен с написания CoffeeScript. Това добавя допълнителна
+              сложност, особено в ранните години на езика.
+            </li>
+            <li>
+              <strong>Опасения при наемане (Hiring Concerns):</strong> С
+              намаляването на популярността, за компаниите ставаше по-трудно да
+              намират нови разработчици, които са запознати с CoffeeScript,
+              предпочитайки да работят с чист ES6+ или TypeScript.
+            </li>
+          </ul>
+          <h3>9.2. Статистика от пазара</h3>
+          <p>
+            Тенденциите в индустрията ясно показват изместването. Докато около
+            2012–2015 г. CoffeeScript беше основна тема в GitHub и блоговете за
+            разработка, след 2016 г. той беше почти напълно засенчен от
+            TypeScript и напредъка на ES6.
+          </p>
+          <ul>
+            <li>
+              <strong>TypeScript:</strong> Приет от големи компании като Google
+              (Angular), Microsoft (който го създава) и Facebook (който го
+              използва в някои проекти), той бързо се превръща в
+              <strong>стандарт за мащабируема разработка</strong>.
+            </li>
+            <li>
+              <strong>CoffeeScript:</strong> Днес се поддържа от малка, но
+              лоялна общност (CoffeeScript 2), като се използва предимно за
+              по-малки проекти или в стари кодови бази, които все още не са
+              мигрирали.
+            </li>
+          </ul>
+          <div class="video-container">
+            <iframe
+              height="315"
+              referrerpolicy="strict-origin-when-cross-origin"
+              src="https://www.youtube.com/embed/Ae4h9GC9cCg"
+              title="YouTube video player: TypeScript vs. CoffeeScript vs. ES6"
+              width="560"
+            >
+            </iframe>
+          </div>
+          <p>
+            Този видеоклип, публикуван през 2015 г., е направен точно в момента,
+            когато започва историческият преход и обяснява защо
+            <strong>технологичното предимство на TypeScript надделява над
+              синтактичната елегантност на CoffeeScript</strong>.
+          </p>
+        </section>
+        <hr class="divider" />
+        
+        <!-- 10. ИЗТОЧНИЦИ -->
+        
+        <section class="section citation-list" id="citations">
+          <h2 class="section-title">10. Списък от източници</h2>
+          <ol>
+            <li>
+              Jeremy Ashkenas, "CoffeeScript: The little language that compiles
+              into JavaScript",
+              [https://coffeescript.org/], последно посетен на 2025-12-03.
+            </li>
+            <li>
+              Jeremy Ashkenas, "CoffeeScript Source Code - README",
+              [https://github.com/jashkenas/coffeescript/blob/main/README.md],
+              последно посетен на 2025-12-17.
+            </li>
+            <li>
+              Duy Nguyen, "What is Transpiler?",
+              [https://o7planning.org/14149/what-is-transpiler], последно
+              посетен на 2025-12-09.
+            </li>
+            <li>
+              Jeremy Ashkenas, "Backbone.js",
+              [https://backbonejs.org/], последно посетен на 2025-12-21.
+            </li>
+            <li>
+              Wikipedia contributors, "CoffeeScript",
+              [https://en.wikipedia.org/wiki/CoffeeScript], последно посетен на
+              2025-12-12.
+            </li>
+            <li>
+              David Heinemeier Hansson, "Rails is omakase", публикуван Dec
+              27 2012, [https://dhh.dk/2012/rails-is-omakase.html], последно
+              посетен на 2025-12-05.
+            </li>
+            <li>
+              Axel Rauschmayer, "The State of JavaScript", публикуван Aug
+              24 2016,
+              [https://2ality.com/2016/08/the-state-of-javascript.html],
+              последно посетен на 2025-12-18.
+            </li>
+            <li>
+              Jeremy Ashkenas, "CoffeeScript 2", публикуван Sep
+              18 2017, [https://coffeescript.org/v2/], последно посетен на
+              2025-12-02.
+            </li>
+            <li>
+              Andy E, "What is the difference between -&gt; and =&gt; in
+              CoffeeScript?",
+              [https://stackoverflow.com/questions/28519713/what-is-the-difference-between-and-in-coffeescript],
+              последно посетен на 2025-12-14.
+            </li>
+            <li>
+              GitHub, "Atom",
+              [https://github.com/atom/atom], последно посетен на 2025-12-23.
+            </li>
+            <li>
+              Discourse Meta, "What is Discourse?",
+              [https://meta.discourse.org/t/what-is-discourse/30555], последно
+              посетен на 2025-12-07.
+            </li>
+            <li>
+              Daniel G. Rodriguez, "Migrating from CoffeeScript to TypeScript at
+              DocuSign",
+              [https://www.docusign.com/blog/developers/migrating-from-coffeescript-to-typescript-at-docusign/],
+              последно посетен на 2025-12-20.
+            </li>
+          </ol>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p>*При изработването на реферата е бил използван изкуствен интелект за генериране на CSS стилове.</p>
+   </footer>
+  </body>
+</html>

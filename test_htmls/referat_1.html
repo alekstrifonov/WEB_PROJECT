@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="bg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Реферат: Micro Frontends Архитектура</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <nav class="main-nav">
+      <div class="container">
+        <ul>
+          <li><a href="#intro">Увод</a></li>
+          <li><a href="#core">Основни Идеи</a></li>
+          <li><a href="#approaches">Интеграция</a></li>
+          <li><a href="#implementation">Реализация</a></li>
+          <li><a href="#demo">LIVE DEMO</a></li>
+          <li><a href="#ssr">Устойчивост</a></li>
+          <li><a href="#analysis">Анализ</a></li>
+          <li><a href="#references">Библиография</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container">
+        <h1>Micro Frontends</h1>
+        <p>Архитектура, Реализация, Предимства</p>
+        <em>Алекс Трифонов 6MI0800328</em>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="intro" class="content-section">
+        <h2>1. Увод</h2>
+        <p>
+          В съвременното уеб програмиране тенденцията за декомпозиране на сложни
+          системи е водеща. Докато при сървърната логика (back-end)
+          архитектурата на <strong>микросървисите (microservices)</strong> е де
+          факто стандарт за мащабни приложения, клиентската част (front-end)
+          дълго време е останала в сянката на т.нар.
+          <strong>"Монолит" (Frontend Monolith)</strong>. Това създава
+          значителни предизвикателства пред мащабните организации, където
+          десетки екипи трябва да работят върху една и съща кодова база.
+        </p>
+        <p>
+          Този реферат разглежда концепцията <strong>Micro Frontends</strong> –
+          архитектурен стил, при който едно уеб приложение се композира от
+          множество по-малки, независимо разработвани и внедрявани приложения.
+          Целта е да се приложат всички ползи от микросървисите – като
+          автономност на екипите, технологична гъвкавост и скалируемост на
+          разработката – върху браузърния интерфейс <a href="#ref1">[1]</a>.
+          Терминът за първи път се споменава в
+          <em>ThoughtWorks Technology Radar</em> в края на 2016 г., като
+          разширение на идеята за микросървисите към фронтенд света.
+        </p>
+        <p>
+          В практическата част (<a href="#demo">секция 5</a>) е демонстрирана
+          работеща реализация чрез базовите уеб технологии (<strong
+            >JavaScript, HTML, CSS</strong
+          >) и стандарта <strong>Web Components</strong>, което доказва, че
+          Micro Frontends могат да бъдат изградени без зависимост от сложни
+          външни библиотеки.
+        </p>
+      </section>
+
+      <section id="core" class="content-section">
+        <h2>2. Основни Идеи и Философия на Micro Frontends</h2>
+
+        <article>
+          <h3>2.1. От Монолит към Вертикално Разделяне</h3>
+          <p>
+            Monolithic SPA (single page application) приложенията често страдат
+            от "спагети код" – неразделима кодова база с преплетени зависимости.
+            Micro Frontends преодоляват това, като въвеждат
+            <em>вертикална организация.</em> Всеки екип има ясна мисия и
+            специализира в отделна бизнес област или функция (напр. "Checkout",
+            "Product", "Recommendations"). Един екип е многофункционален и
+            разработва своята функция от край до край: от базата данни до
+            потребителския интерфейс <a href="#ref2">[2]</a>.
+          </p>
+          <figure style="text-align: center; margin: 30px 0">
+            <figcaption
+              style="font-style: italic; margin-bottom: 10px"
+              ;
+              id="img1"
+            >
+              Фигура 1: Традиционен монолитен фронтенд (Източник:
+              micro-frontentds.org)
+            </figcaption>
+            <img
+              src="https://micro-frontends.org/ressources/diagrams/organisational/monolith-frontback-microservices.png"
+              alt="Диаграма, показваща разделението между Backend Microservices и Monolithic Frontend, и преминаването към вертикална организация на екипите."
+              style="
+                max-width: 100%;
+                height: auto;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              "
+            />
+          </figure>
+          <figure style="text-align: center; margin: 30px 0" , id="img2">
+            <figcaption style="font-style: italic; margin-bottom: 10px">
+              Фигура 2: Micro Frontends (Източник: micro-frontentds.org)
+            </figcaption>
+
+            <img
+              src="https://micro-frontends.org/ressources/diagrams/organisational/verticals-headline.png"
+              alt="Диаграма, показваща вертикалното разделение на екипите по бизнес домейни, всеки със свой Frontend и Backend."
+              style="
+                max-width: 100%;
+                height: auto;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              "
+            />
+          </figure>
+          <p>
+            Тази концепция има много общо с идеята за
+            <em>Самодостатъчни системи (Self-contained Systems)</em>, но прилага
+            фокуса върху потребителския интерфейс.
+          </p>
+        </article>
+
+        <article>
+          <h3>2.2. Фундаментални Принципи</h3>
+          <p>
+            Философията на MF се гради върху следните ключови принципи, които
+            осигуряват автономност и устойчивост:
+          </p>
+          <ul>
+            <li>
+              <strong>Технологична Агностика:</strong> Всеки екип трябва да може
+              да избира и обновява своя технологичен стек без да координира това
+              с другите екипи.
+            </li>
+            <li>
+              <strong>Изолиран Екипен Код:</strong> Не трябва да се споделя
+              среда за изпълнение, дори ако всички екипи използват един и същ
+              фреймуърк. Трябва да се изграждат независими, самодостатъчни
+              приложения.
+            </li>
+            <li>
+              <strong>Установен Екипни Префикси:</strong> Там, където изолацията
+              е невъзможна (напр. глобални пространства), трябва да се договорят
+              конвенции за именуване. Префиксирането на CSS класове, Custom
+              Events, Local Storage и бисквитки избягва конфликтите и изяснява
+              собствеността (напр. <code> blue-product-list</code>).
+            </li>
+            <li>
+              <strong>Нативни Браузърни Функции:</strong> Трябва да се избягва
+              изграждането на глобални Publish-Subscribe системи, вместо това да
+              се използват вградените <em>Browser Events</em> за комуникация.
+              Ако създаването на API е неизбежно, то трябва да е възможно
+              най-просто.
+            </li>
+            <li>
+              <strong>Устойчив Сайт:</strong> Функционалността трябва да бъде
+              полезна, дори ако JavaScript не се е изпълнил. Използвайте
+              универсално изобразяване и прогресивно подобрение, за да подобрите
+              възприеманата производителност.
+            </li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="approaches" class="content-section">
+        <h2>3. Архитектурни Подходи за Интеграция и Комуникация</h2>
+        <p>
+          Методът за интегриране на отделните Micro Frontends в единен
+          потребителски интерфейс е критичен за успешното функциониране на
+          архитектурата.
+        </p>
+
+        <article>
+          <h3>3.1. DOM като API: Custom Elements</h3>
+          <p>
+            При Run-Time интеграция, <strong>DOM се превръща в API</strong>.
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements"
+              >Custom Elements</a
+            >
+            (част от Web Components) са идеалният примитив за интеграция в
+            браузъра <a href="#ref2">[2]</a>. Всеки екип изгражда своя компонент
+            и го опакова в Custom Element (напр.
+            <code>&lt;order-minicart&gt;</code>). Спецификацията на този елемент
+            (име на тага, атрибути и събития) действа като
+            <em>публичен договор</em> за другите екипи. Те могат да използват
+            компонента, без да знаят вътрешната му имплементация (дали е React,
+            Vue или JS).
+          </p>
+
+          <h4>Комуникация Родител-Дете (Parent-Child)</h4>
+          <p>
+            Комуникацията от контейнера към компонента става чрез промяна на
+            <em>Атрибути</em>. За да поддържа това, Custom Element трябва да
+            имплементира статичния метод <code>observedAttributes()</code> и да
+            използва
+            <code>attributeChangedCallback(attr, oldValue, newValue)</code>.
+          </p>
+
+          <p>
+            <strong>Разяснение:</strong>
+            Ако искаме да променим състоянието или външния вид на един
+            компонент, базирайки се на външни данни (напр. от родителски
+            елемент), най-неефективно би било да премахнем стария Custom Element
+            от DOM и да вмъкнем нов елемент с новите данни. Статичният метод
+            <code>observedAttributes()</code> декларира пред браузъра кои точно
+            атрибути на Custom Element трябва да бъдат наблюдавани. Когато един
+            от тези атрибути се промени, браузърът автоматично извиква
+            <code>attributeChangedCallback()</code>, позволявайки на компонента
+            ефективно да актуализира вътрешното си състояние или изглед, без да
+            се налага премахване и повторно вмъкване на целия елемент в DOM.
+          </p>
+        </article>
+
+        <article>
+          <h3>3.2. Комуникация между Компоненти (Siblings Communication)</h3>
+          <p>
+            За взаимодействие между компоненти на едно и също ниво (напр. Списък
+            с продукти и Кошница), се използва моделът
+            <em>PubSub (Publish/Subscribe)</em>, реализиран чрез
+            <em>Custom Events</em> <a href="#ref3">[3]</a>.
+          </p>
+          <p>
+            Събитията са винаги обвързани с DOM нода, на който са създадени, и
+            повечето от тях поддържат "бъблинг" (изкачване нагоре по DOM
+            дървото). Това позволява на главния контейнер (Shell) да слуша
+            всички събития на едно място, без компонентите да знаят нищо един за
+            друг. В нашето демо това се реализира чрез
+            <code
+              >dispatchEvent(new CustomEvent('product-selected', { bubbles: true
+              }))</code
+            >.
+          </p>
+        </article>
+      </section>
+
+      <section id="implementation" class="content-section">
+        <h2>4. Детайли по Реализацията (JS)</h2>
+        <p>
+          Използването на JS и Web Components гарантира, че не разчитаме на
+          външни библиотеки/frameworks. Ключовата роля на <em>Shadow DOM</em> е
+          да осигури <em>капсулация</em>. Той създава отделно DOM дърво, което е
+          прикрепено към хост елемента и гарантира, че
+          <em>CSS стиловете в него са изолирани</em> от глобалната страница.
+          Това решава един от най-големите проблеми на споделените фронтенд
+          кодови бази – CSS конфликтите <a href="#ref4">[4]</a>.
+        </p>
+
+        <article>
+          <h3>4.1. Пример за `product-list` (Team Product)</h3>
+          <p>
+            Дефиницията на класа <code>ProductList</code>, където се вижда, че
+            при клик се изпраща събитие, а не се вика директно друг компонент:
+          </p>
+
+          <figure class="code-figure">
+            <figcaption id="code1">
+              Код 1: Javascript клас за списъка с продукти (изпращане на Custom
+              Event)
+            </figcaption>
+            <pre><code>class ProductList extends HTMLElement {
+              // ... (конструктор, Shadow DOM, render)
+
+              buy(id, name) {
+              // Създаване на Custom Event с данни и активиране на bubbling
+              const event = new CustomEvent('product-selected', {
+              detail: { id, name },
+              bubbles: true,
+              composed: true
+              });
+              this.dispatchEvent(event);
+              }
+              }
+              customElements.define('blue-product-list', ProductList);</code></pre>
+          </figure>
+        </article>
+
+        <article>
+          <h3>4.2. Пример за `red-basket` (Team Basket)</h3>
+          <p>
+            Компонентът за кошницата (Team Red) е този, който приема данните.
+            Той има публичен метод <code>addItem(item)</code>, който се извиква
+            от Shell-а. Това е пример за <em>Orchestration Layer</em>.
+          </p>
+
+          <figure class="code-figure">
+            <figcaption id="code2">
+              Код 2: Javascript клас за кошницата (приемане на данни)
+            </figcaption>
+            <pre><code>class ShoppingBasket extends HTMLElement {
+              // ... (constructor и render методи)
+
+              // Публичен метод, който се вика от Shell-а, за да добави артикул
+              addItem(item) {
+              this.items.push(item);
+              this.render(); // Обновява се само този компонент
+              }
+              }
+              customElements.define('red-basket', ShoppingBasket);</code></pre>
+          </figure>
+        </article>
+      </section>
+
+      <section id="demo" class="demo-wrapper">
+        <h2>5. Практическа Демонстрация (Live Demo)</h2>
+        <p>
+          <em
+            >Инструкция: Кликнете бутона "Купи" в синия панел и наблюдавайте
+            промяната в червения панел и лога. Демонстрира се комуникация между
+            два независимо разработени Custom Elements, управлявана от
+            shell-a.</em
+          >
+        </p>
+
+        <div class="micro-frontend-container">
+          <div class="mf-box red-team">
+            <span class="badge red">Team Basket</span>
+            <red-basket id="basket-component"></red-basket>
+          </div>
+
+          <div class="mf-box blue-team">
+            <span class="badge blue">Team Products</span>
+            <blue-product-list id="products-component"></blue-product-list>
+          </div>
+        </div>
+
+        <div class="console-log" id="demo-console">
+          <div style="color: #888">
+            > System Ready. Waiting for user interaction...
+          </div>
+        </div>
+      </section>
+
+      <section id="ssr" class="content-section">
+        <h2>6. Устойчивост, Рендиране и Потребителско Изживяване (UX)</h2>
+
+        <article>
+          <h3>6.1. Универсално Рендиране (Universal Rendering)</h3>
+          <p>
+            За да се постигне "Устойчив сайт", е необходимо
+            <em>Универсално Зареждане (Rendering)</em>, при което основното
+            съдържание се генерира на сървъра, дори ако компонентите са
+            MicroFrontend. Един от най-простите начини за постигане на
+            Server-Side Rendering (SSR) е чрез
+            <em>Server Side Includes (SSI)</em> <a href="#ref2">[2]</a>.
+          </p>
+          <p>
+            При този модел, главният сървър предава заявката към сървъра на
+            съответния екип. HTML кодът на компонента се вмъква в главния
+            документ чрез специален коментар (<code
+              >&lt;!--#include virtual="/mf-endpoint" --&gt;</code
+            >) преди страницата да бъде изпратена на браузъра. На браузърно
+            ниво, Custom Element се <em>хидратира</em> (добавя му се JavaScript
+            интерактивност), като се ползва вече наличният от сървъра HTML.
+          </p>
+          <p>
+            Този подход е ключов за <em>Прогресивно Подобрение</em> и гарантира,
+            че потребителите с бавна връзка или без JavaScript ще видят поне
+            основното съдържание.
+          </p>
+        </article>
+
+        <article>
+          <h3>6.2. Управление на Състоянията на Зареждане (Loading States)</h3>
+          <p>
+            Когато Micro Frontend-ът зарежда данни асинхронно, е важно да се
+            избегне неприятното пренареждане на страницата (<em>Reflow</em>). За
+            целта се препоръчва използването на <em>Skeleton Screens</em>
+            <a href="#ref2">[2]</a>.
+          </p>
+          <p>
+            <strong>Skeleton Screens</strong> са схематични версии на
+            съдържанието, които запазват нужното пространство в Layout-а, докато
+            се чака зареждането на реалните данни. По този начин, когато
+            реалният компонент се зареди, той заема предварително определеното
+            място, без да избутва останалите елементи на страницата, което
+            значително подобрява възприеманото потребителско изживяване
+            (Perceived Performance).
+          </p>
+        </article>
+      </section>
+
+      <section id="analysis" class="content-section">
+        <h2>
+          7. Оперативен Анализ: Предимства, Предизвикателства и Управление
+        </h2>
+
+        <article>
+          <h3>7.1. Ключови Предимства</h3>
+          <p>
+            Micro Frontends предоставят ясни организационни и технически
+            предимства:
+          </p>
+          <ul>
+            <li>
+              <em>Независимo Разработване:</em> Това е най-голямото предимство.
+              Екипите могат да пускат нови версии по всяко време, без риск да
+              счупят цялата система, което води до по-бърз
+              <em>Time-to-market</em>.
+            </li>
+            <li>
+              <em>Технологична Свобода и Модернизация:</em> Позволява поетапна
+              миграция на стари приложения. Нов екип може да започне работа с
+              модерни библиотеки, докато старият компонент продължава да работи
+              с по-стара технология.
+            </li>
+            <li>
+              <em>Изолация на Грешките:</em> Срив в един модул (напр. реклами
+              или препоръки) не спира основната функционалност на приложението
+              (напр. плащане).
+            </li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>7.2. Основни Предизвикателства и Управление</h3>
+          <p>
+            Въпреки предимствата, Micro Frontends въвеждат оперативна сложност
+            <a href="#ref5">[5]</a>. Тези предизвикателства трябва да бъдат
+            управлявани внимателно:
+          </p>
+          <ul>
+            <li>
+              <em>Избягване на Framework Anarchy:</em> Въпреки че технологичната
+              свобода е голяма, не е мъдро да се смесват твърде много
+              технологии. Трябва да се създаде разумно ниво на
+              <em>унифицираност (alignment)</em>, за да могат екипите да
+              споделят знания и да се поддържа централизирана система за дизайн
+              <a href="#ref2">[2]</a>.
+            </li>
+            <li>
+              <em>Дублиране на Код:</em> Трябва да се предвиди механизъм за
+              споделяне на големи библиотеки (напр. React) от Shell-а, за да не
+              се налага всеки Micro Frontend да ги зарежда наново.
+            </li>
+            <li>
+              <em>Крос-Функционални Проблеми:</em> Елементи като
+              <em>Автентикация (Authentication)</em>, <em>Вход</em> и
+              <em>Global Routing</em> трябва да се управляват централно от
+              Shell-а.
+            </li>
+            <li>
+              <em>Дизайн и UX Консистентност:</em> Поддържането на еднообразен
+              UI/UX изисква сериозна система за дизайн, която всички екипи да
+              използват като обща библиотека от стилове и компоненти.
+            </li>
+          </ul>
+          Накратко: Microfrontends не са подходящи за малки или прости
+          приложения, когато няма нужда от независими екипи, защото добавят
+          излишна сложност. Те също са лош избор при силно свързана логика,
+          строги изисквания за производителност и дизайн.
+        </article>
+      </section>
+
+      <section id="conclusion" class="content-section">
+        <h2>8. Заключение</h2>
+        <p>
+          Micro Frontends архитектурата е естествена еволюция на софтуерния
+          дизайн, пренасяйки успешни back-end модели към клиентската част. Тя
+          предоставя отговор на проблемите, свързани с мащаба и скоростта на
+          разработка в големи организации. Чрез стриктното прилагане на
+          принципите за изолация, технологична агностичност и използване на
+          стандарти като Web Components, може да се постигне архитектура със
+          слаба свързаност, която е едновременно гъвкава и устойчива.
+        </p>
+        <p>
+          Демонстрацията показа, че дори с чистия JavaScript и Custom Elements,
+          може да се изгради напълно функционална, компонентно-базирана
+          архитектура, поддържайки всички ключови концепции на Micro Frontends.
+        </p>
+      </section>
+
+      <section id="references" class="references-section">
+        <h3>9. Библиография / Използвана литература</h3>
+        <div id="ref1">
+          [1] Tom Soderlund, "Micro frontends—a microservice approach to
+          front-end web development",
+          <a
+            href="https://www.tomsoderlund.com/programming/micro-frontends-a-microservice-approach-to-front-end-web-development"
+            target="_blank"
+            >tomsoderlund.com</a
+          >, July 2017
+        </div>
+        <div id="ref2">
+          [2] Michael Geers, "Micro Frontends - extending the microservice idea
+          to frontend development",
+          <a href="https://micro-frontends.org/" target="_blank"
+            >micro-frontends.org</a
+          >
+        </div>
+        <div id="ref3">
+          [3] PepsRyuu, "Micro-Frontends: What, why, and how",
+          <a
+            href="https://medium.com/@PepsRyuu/micro-frontends-341defa8d1d4"
+            target="_blank"
+            >Medium</a
+          >
+        </div>
+
+        <div id="ref4">
+          [4] Google Developers, "Custom Elements v1: Reusable Web Components",
+          <a
+            href="https://developers.google.com/web/fundamentals/web-components/customelements"
+            target="_blank"
+            >Google Developers</a
+          >
+        </div>
+        <div id="ref5">
+          [5] Packt Hub, "What are micro frontends?",
+          <a
+            href="https://hub.packtpub.com/what-micro-frontend/"
+            target="_blank"
+            >Packt Hub</a
+          >
+        </div>
+
+        <h3>Списък с фигури:</h3>
+        <ul>
+          <li>Фигура 1: <a href="#img1">Традиционен монолитен фронтенд</a></li>
+          <li>Фигура 2: <a href="#img2">Micro Frontends</a></li>
+        </ul>
+
+        <h3>Списък с код:</h3>
+        <ul>
+          <li>
+            Код 1:
+            <a href="#code1">
+              Javascript клас за списъка с продукти (изпращане на Custom Event)
+            </a>
+          </li>
+
+          <li>
+            Код 2:
+            <a href="#code2"
+              >Javascript клас за кошницата (приемане на данни)</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>2025 Курсов проект по Уеб Технологии.</p>
+    </footer>
+
+    <script src="micro-frontends.js"></script>
+  </body>
+</html>
