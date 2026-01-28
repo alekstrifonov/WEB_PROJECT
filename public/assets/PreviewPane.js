@@ -87,14 +87,85 @@ function printPreview() {
     iframe.contentWindow.print();
   } catch (_) {}
 }
+
 document.addEventListener("DOMContentLoaded", () => {
     const generate_btn = document.getElementById("generate-btn");
-    if (!generate_btn) return;
-
-    generate_btn.addEventListener("click", generatePreview);
-
     const print_btn = document.getElementById("print-btn");
-    if (!print_btn) return;
 
-    print_btn.addEventListener("click", printPreview);
+    const autoToggle = document.getElementById("auto-gen-toggle");
+
+    const formInputs = document.querySelectorAll("#print-form input, #print-form select, #print-form textarea");
+
+    function smartGenerate() {
+        if (!autoToggle || !autoToggle.checked) return;
+
+        const scrollX = window.scrollX;
+        const scrollY = window.scrollY;
+
+        generatePreview(); 
+
+        setTimeout(() => {
+            window.scrollTo(scrollX, scrollY);
+        }, 0);
+    }
+
+    formInputs.forEach(input => {
+        if (input === autoToggle || input.type === 'file') return;
+
+        if (input.type === 'checkbox' || input.type === 'radio' || input.tagName === 'SELECT') {
+            input.addEventListener("change", smartGenerate);
+        } 
+        else {
+            input.addEventListener("input", smartGenerate);
+        }
+    });
+
+    // function smartGenerate() {
+    //     const toggle = document.getElementById("auto-gen-toggle");
+    //     if (toggle && !toggle.checked) return;
+
+    //     const scrollX = window.scrollX;
+    //     const scrollY = window.scrollY;
+
+    //     generatePreview(); 
+
+    //     setTimeout(() => {
+    //         window.scrollTo(scrollX, scrollY);
+    //     }, 0);
+    // }
+
+    // const inputs = document.querySelectorAll("input, select, textarea");
+
+    // inputs.forEach(input => {
+    //     if (input.type === "checkbox" || input.type === "radio") {
+    //         input.addEventListener("change", smartGenerate);
+    //     } 
+    //     else {
+    //         input.addEventListener("input", smartGenerate);
+    //     }
+    // });
+
+    if (generate_btn) generate_btn.addEventListener("click", generatePreview);
+    if (print_btn) print_btn.addEventListener("click", printPreview);
 });
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     const generate_btn = document.getElementById("generate-btn");
+//     const print_btn = document.getElementById("print-btn");
+//     const auto_toggle = document.getElementById("auto-gen-toggle");
+
+//     function handleAutoUpdate() {
+//         if (!auto_toggle || !auto_toggle.checked) return;
+//         generatePreview();
+//     }
+    
+//     const inputs = document.querySelectorAll("input, select, textarea");
+
+//     inputs.forEach(input => {
+//         if (input === auto_toggle) return;
+//         input.addEventListener("change", handleAutoUpdate);
+//     });
+    
+//     if (generate_btn) generate_btn.addEventListener("click", generatePreview);
+//     if (print_btn) print_btn.addEventListener("click", printPreview);
+// });

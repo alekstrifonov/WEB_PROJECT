@@ -53,6 +53,11 @@ require_once __DIR__ . '/../core/require_login.php';
                             ГЕНЕРИРАЙ ПРЕГЛЕД
                         </button>
                     </div>
+
+                    <label>
+                        <input type="checkbox" id="auto-gen-toggle"> 
+                        Презареждай прегледа при промяна
+                    </label>
                 </section>
 
                 <section class="form-section">
