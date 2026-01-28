@@ -254,7 +254,7 @@ $errors = [
     </a>
 
     <nav class="actions">
-      <a class="btn secondary" href="dashboard.php">Профил</a>
+      <a class="btn secondary" href="dashboard.php"> Назад</a>
     </nav>
   </header>
 

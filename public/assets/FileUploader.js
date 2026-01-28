@@ -2,7 +2,6 @@ class FileUploader {
     constructor() {
 
         this.allFiles = [];
-        
         this.fileInput = document.getElementById('file-explorer');
         this.dropZone = document.querySelector('.upload-zone');
         this.fileListUI = document.getElementById('file-list');
@@ -70,14 +69,14 @@ class FileUploader {
 
     render() {
         this.fileListUI.innerHTML = '';
-        
+
         const hasFiles = this.allFiles.length > 0;
         this.statusText.style.display = hasFiles ? 'none' : 'block';
 
         this.allFiles.forEach((file, index) => {
             const item = document.createElement('div');
             item.className = 'file-item';
-            
+
             item.innerHTML = `
                 <div class="file-info">
                     <span class="file-name">${file.name}</span>
@@ -85,7 +84,7 @@ class FileUploader {
                 </div>
                 <button type="button" class="btn-remove">Премахни</button>
             `;
-            
+
             item.querySelector('.btn-remove').onclick = () => this.removeFile(index);
             this.fileListUI.appendChild(item);
         });

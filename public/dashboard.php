@@ -18,13 +18,19 @@ $list = $projectModel->listByUser($userId);
 
 $projects = [];
 foreach ($list as $project) {
+    $payload = json_decode($project['payload'], true);
   $projects[] = [
     'id' => $project['id'],
     'title' => $project['name'],
     'created_at' => $project['created_at'],
-    'updated_at' => $project['updated_at']
+    'updated_at' => $project['updated_at'],
+    'words' => $payload['stats']['words'] ?? 0  ,
+    'lines' => $payload['stats']['lines'],
+    'pages' => $payload['stats']['pages']
   ];
 }
+error_log(json_encode($list, JSON_PRETTY_PRINT));
+
 
 ?>
 <!doctype html>
@@ -295,8 +301,12 @@ foreach ($list as $project) {
                 <h3><?= htmlspecialchars($p['title']) ?></h3>
                 <small>
                   Създаден: <?= htmlspecialchars($p['created_at']) ?> •
-                  Последна промяна: <?= htmlspecialchars($p['updated_at']) ?>
+                  Последна промяна: <?= htmlspecialchars($p['updated_at']) ?>   <br>
+                  Брой думи: <?= htmlspecialchars("{$p['words']}") ?> •
+                  Брой страници: <?= htmlspecialchars("{$p['pages']}") ?> •
+                  Брой редове: <?= htmlspecialchars("{$p['lines']}") ?>
                 </small>
+                  
               </div>
               <div class="actions">
                 <a class="btn secondary" href="editor.php?project_id=<?= (int)$p['id'] ?>&project_name=<?= (string)$p['title'] ?>">
