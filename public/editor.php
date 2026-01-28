@@ -249,17 +249,19 @@ require_once __DIR__ . '/../core/require_login.php';
         </section>
     </main>
 
-    <div id="saveProjectModal" class="modal-overlay">
+        <div id="saveProjectModal" class="modal-overlay">
         <div class="modal-window">
             <h2>Запази проект</h2>
-            
             <div id="saveModalMsg" class="modal-msg" style="display:none;"></div>
-
+            <div id="separate_save" style="display:none;">
+                <label class="custom-checkbox-row">
+                    <span>Запази като отделен проект?</span>
+                    <input type="checkbox" id="saveAsSeparateProject">
+                </label>
+            </div>
             <div class="input-group">
-                <!-- <label for="projectNameInput">Име</label> -->
                 <input type="text" id="projectNameInput" placeholder="Въведи име на проекта">
             </div>
-
             <div class="modal-actions">
                 <button id="saveModalCancel" type="button" class="btn-reset">Отказ</button>
                 <button id="saveModalConfirm" type="button" class="btn-save">Запази</button>
