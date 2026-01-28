@@ -76,96 +76,71 @@ async function generatePreview() {
 }
 
 function printPreview() {
-  const iframe = document.querySelector(".preview-area iframe");
-  if (!iframe || !iframe.contentWindow) {
-    alert("Няма генериран преглед за принтиране.");
-    return;
-  }
-
-  try {
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-  } catch (_) {}
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const generate_btn = document.getElementById("generate-btn");
-    const print_btn = document.getElementById("print-btn");
-
-    const autoToggle = document.getElementById("auto-gen-toggle");
-
-    const formInputs = document.querySelectorAll("#print-form input, #print-form select, #print-form textarea");
-
-    function smartGenerate() {
-        if (!autoToggle || !autoToggle.checked) return;
-
-        const scrollX = window.scrollX;
-        const scrollY = window.scrollY;
-
-        generatePreview(); 
-
-        setTimeout(() => {
-            window.scrollTo(scrollX, scrollY);
-        }, 0);
+    const iframe = document.querySelector(".preview-area iframe");
+    if (!iframe || !iframe.contentWindow) {
+        alert("Няма генериран преглед за принтиране.");
+        return;
     }
 
-    formInputs.forEach(input => {
-        if (input === autoToggle || input.type === 'file') return;
+    try {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+    } catch (_) { }
+}
 
-        if (input.type === 'checkbox' || input.type === 'radio' || input.tagName === 'SELECT') {
-            input.addEventListener("change", smartGenerate);
-        } 
-        else {
-            input.addEventListener("input", smartGenerate);
-        }
-    });
+// Auto-refresh functionality
+function setupAutoRefresh() {
+    const autoGenToggle = document.getElementById("auto-gen-toggle");
+    const printForm = document.getElementById("print-form");
 
-    // function smartGenerate() {
-    //     const toggle = document.getElementById("auto-gen-toggle");
-    //     if (toggle && !toggle.checked) return;
+    if (!autoGenToggle || !printForm) return;
 
-    //     const scrollX = window.scrollX;
-    //     const scrollY = window.scrollY;
+    let debounceTimer;
 
-    //     generatePreview(); 
+    function handleFormChange() {
+        if (!autoGenToggle.checked) return;
 
-    //     setTimeout(() => {
-    //         window.scrollTo(scrollX, scrollY);
-    //     }, 0);
-    // }
+        // Debounce to avoid too many requests
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            generatePreview();
+        }, 500);
+    }
 
-    // const inputs = document.querySelectorAll("input, select, textarea");
+    // Listen to all input, select, and checkbox changes in the form
+    printForm.addEventListener("change", handleFormChange);
+    printForm.addEventListener("input", handleFormChange);
+}
 
-    // inputs.forEach(input => {
-    //     if (input.type === "checkbox" || input.type === "radio") {
-    //         input.addEventListener("change", smartGenerate);
-    //     } 
-    //     else {
-    //         input.addEventListener("input", smartGenerate);
-    //     }
-    // });
+// Initialize auto-refresh when DOM is ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupAutoRefresh);
+} else {
+    setupAutoRefresh();
+}
 
-    if (generate_btn) generate_btn.addEventListener("click", generatePreview);
-    if (print_btn) print_btn.addEventListener("click", printPreview);
-});
+// Wire up the Generate and Print buttons
+function setupButtons() {
+    const generateBtn = document.getElementById("generate-btn");
+    const printBtn = document.getElementById("print-btn");
 
-// document.addEventListener("DOMContentLoaded", () => {
-//     const generate_btn = document.getElementById("generate-btn");
-//     const print_btn = document.getElementById("print-btn");
-//     const auto_toggle = document.getElementById("auto-gen-toggle");
+    if (generateBtn) {
+        generateBtn.addEventListener("click", () => {
+            generatePreview();
+        });
+    }
 
-//     function handleAutoUpdate() {
-//         if (!auto_toggle || !auto_toggle.checked) return;
-//         generatePreview();
-//     }
-    
-//     const inputs = document.querySelectorAll("input, select, textarea");
+    if (printBtn) {
+        printBtn.addEventListener("click", () => {
+            printPreview();
+        });
+    }
+}
 
-//     inputs.forEach(input => {
-//         if (input === auto_toggle) return;
-//         input.addEventListener("change", handleAutoUpdate);
-//     });
-    
-//     if (generate_btn) generate_btn.addEventListener("click", generatePreview);
-//     if (print_btn) print_btn.addEventListener("click", printPreview);
-// });
+// Initialize buttons when DOM is ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupButtons);
+} else {
+    setupButtons();
+}
+
