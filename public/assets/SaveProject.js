@@ -25,21 +25,52 @@ document.addEventListener("DOMContentLoaded", () => {
     msgBox.className = "modal-msg";
   }
 
-  if (headerSaveBtn) {
-    headerSaveBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        clearMsg();
-
+  // Add event listener for the checkbox
+  const saveAsSeparateCheckbox = document.getElementById("saveAsSeparateProject");
+  if (saveAsSeparateCheckbox) {
+    saveAsSeparateCheckbox.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        nameInput.style.display = "block";
+        nameInput.placeholder = "Въведи име на новия проект";
+        nameInput.value = "";
+        nameInput.focus();
+      } else {
+        nameInput.style.display = "none";
+        // Restore original project name if unchecked
         const params = new URLSearchParams(window.location.search);
         const existingName = params.get("project_name");
-
         if (existingName) {
-            nameInput.value = existingName;
+          nameInput.value = existingName;
+        }
+      }
+    });
+  }
+
+  if (headerSaveBtn) {
+    headerSaveBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      clearMsg();
+
+      const params = new URLSearchParams(window.location.search);
+      const existingName = params.get("project_name");
+
+      if (existingName) {
+        nameInput.value = existingName;
+
+        const separateProjectCheckbox = document.getElementById("separate_save");
+        if (separateProjectCheckbox) {
+          separateProjectCheckbox.style.display = "block";
+          nameInput.style.display = "none";
         }
 
+        // Reset checkbox state
+        if (saveAsSeparateCheckbox) {
+          saveAsSeparateCheckbox.checked = false;
+        }
+      }
 
-        modal.classList.add("active");
-        nameInput.focus();
+      modal.classList.add("active");
+      nameInput.focus();
     });
   }
 
@@ -58,24 +89,36 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     clearMsg();
 
-    const projectName = nameInput.value.trim();
-    if (!projectName) {
-      showMsg("error", "Не сте въвели име на проекта.");
-      nameInput.focus();
-      return;
+    const params = new URLSearchParams(window.location.search);
+    const existingId = params.get("project_id");
+    const separateProjectCheckbox = document.getElementById("separate_save");
+
+    let projectName;
+
+    // Check if user wants to save as separate project
+    if (existingId && saveAsSeparateCheckbox && saveAsSeparateCheckbox.checked) {
+      projectName = nameInput.value.trim();
+      if (!projectName) {
+        showMsg("error", "Не сте въвели име за новия проект.");
+        nameInput.focus();
+        return;
+      }
+    } else {
+      projectName = nameInput.value.trim();
+      if (!projectName) {
+        showMsg("error", "Не сте въвели име на проекта.");
+        nameInput.focus();
+        return;
+      }
     }
 
     const fd = new FormData(form);
-
     fd.set("generate_preview", "1");
-
     fd.set("project_name", projectName);
 
-    const params = new URLSearchParams(window.location.search);
-    const existingId = params.get("project_id");
-    
-    if (existingId) {
-        fd.set("project_id", existingId);
+    // Only set project_id if not saving as separate project
+    if (existingId && (!saveAsSeparateCheckbox || !saveAsSeparateCheckbox.checked)) {
+      fd.set("project_id", existingId);
     }
 
     try {
